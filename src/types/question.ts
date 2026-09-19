@@ -15,3 +15,17 @@ export interface Question {
   score: number
   createdAt: string
 }
+
+export interface CreateTestCaseRequest {
+  input: string
+  expectedOutput: string
+  isPrivate: boolean
+}
+
+export interface CreateQuestionRequest {
+  title: string
+  description: string
+  allowedLanguages: ProgrammingLanguage[]
+  testCases: CreateTestCaseRequest[]
+  score: number
+}

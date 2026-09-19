@@ -43,22 +43,6 @@ export function AssessmentDetailPage() {
     void loadQuestions()
   }, [assessmentId])
 
-  if (isLoading) {
-    return (
-      <main className="min-h-screen bg-slate-50 px-6 py-10">
-        <p>Loading questions...</p>
-      </main>
-    )
-  }
-
-  if (error) {
-    return (
-      <main className="min-h-screen bg-slate-50 px-6 py-10">
-        <p className="text-red-600">{error}</p>
-      </main>
-    )
-  }
-
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-10">
       <div className="mx-auto max-w-5xl">
@@ -69,68 +53,122 @@ export function AssessmentDetailPage() {
           ← Back to assessments
         </Link>
 
-        <header className="mt-6">
-          <p className="text-sm text-slate-500">
-            Technical Assessment
-          </p>
+        <div className="mt-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div>
+            <p className="text-sm text-slate-500">
+              Technical Assessment
+            </p>
 
-          <h1 className="mt-1 text-3xl font-bold tracking-tight">
-            Questions
-          </h1>
+            <h1 className="mt-1 text-3xl font-bold tracking-tight">
+              Assessment questions
+            </h1>
 
-          <p className="mt-2 text-slate-600">
-            Select a programming question to start solving.
-          </p>
-        </header>
+            <p className="mt-2 text-slate-600">
+              Review the programming questions available for
+              this assessment.
+            </p>
+          </div>
 
-        {questions.length === 0 && (
+          {assessmentId && (
+            <Button asChild>
+              <Link
+                to={`/assessments/${assessmentId}/questions/new`}
+              >
+                Create question
+              </Link>
+            </Button>
+          )}
+        </div>
+
+        {isLoading && (
           <p className="mt-8 text-slate-500">
-            No questions available for this assessment.
+            Loading questions...
           </p>
         )}
 
-        <div className="mt-8 grid gap-4">
-          {questions.map((question, index) => (
-            <article
-              key={question.id}
-              className="rounded-xl border bg-white p-6 shadow-sm"
-            >
-              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                <div>
-                  <p className="text-sm text-slate-500">
-                    Question {index + 1}
-                  </p>
+        {error && (
+          <p className="mt-8 text-red-600">
+            {error}
+          </p>
+        )}
 
-                  <h2 className="mt-1 text-xl font-semibold">
-                    {question.title}
-                  </h2>
+        {!isLoading &&
+          !error &&
+          questions.length === 0 && (
+            <div className="mt-8 rounded-xl border bg-white p-8 text-center shadow-sm">
+              <h2 className="text-lg font-semibold">
+                No questions available
+              </h2>
 
-                  <p className="mt-2 text-slate-600">
-                    {question.description}
-                  </p>
+              <p className="mt-2 text-sm text-slate-500">
+                This assessment does not have programming
+                questions yet.
+              </p>
 
-                  <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-500">
-                    <span>
-                      {question.score} points
-                    </span>
-
-                    <span>
-                      {question.allowedLanguages.join(', ')}
-                    </span>
-                  </div>
-                </div>
-
-                <Button asChild>
+              {assessmentId && (
+                <Button
+                  asChild
+                  className="mt-5"
+                >
                   <Link
-                    to={`/assessments/${assessmentId}/questions/${question.id}`}
+                    to={`/assessments/${assessmentId}/questions/new`}
                   >
-                    Solve question
+                    Create first question
                   </Link>
                 </Button>
-              </div>
-            </article>
-          ))}
-        </div>
+              )}
+            </div>
+          )}
+
+        {!isLoading &&
+          !error &&
+          questions.length > 0 && (
+            <div className="mt-8 space-y-4">
+              {questions.map((question, index) => (
+                <article
+                  key={question.id}
+                  className="rounded-xl border bg-white p-6 shadow-sm"
+                >
+                  <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+                    <div>
+                      <p className="text-sm text-slate-500">
+                        Question {index + 1}
+                      </p>
+
+                      <h2 className="mt-1 text-xl font-semibold">
+                        {question.title}
+                      </h2>
+
+                      <p className="mt-2 text-slate-600">
+                        {question.description}
+                      </p>
+
+                      <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-500">
+                        <span>
+                          Score: {question.score}
+                        </span>
+
+                        <span>
+                          Languages:{' '}
+                          {question.allowedLanguages.join(
+                            ', ',
+                          )}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Button asChild>
+                      <Link
+                        to={`/assessments/${assessmentId}/questions/${question.id}`}
+                      >
+                        Solve question
+                      </Link>
+                    </Button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
       </div>
     </main>
   )

@@ -3,6 +3,7 @@ import { AssessmentsPage } from '@/pages/assessments/AssessmentsPage'
 import { QuestionSolvePage } from '@/pages/questions/QuestionSolvePage'
 import { AssessmentDetailPage } from './pages/assessments/AssessmentDetailPage'
 import { ResultsPage } from './pages/results/ResultsPage'
+import { CreateAssessmentPage } from './pages/assessments/CreateAssessmentPage'
 
 function App() {
   return (
@@ -12,6 +13,10 @@ function App() {
       <Route
         path="/assessments/:assessmentId/questions/:questionId"
         element={<QuestionSolvePage />}
+      />
+      <Route
+        path="/assessments/new"
+        element={<CreateAssessmentPage />}
       />
       <Route
         path="/assessments/:assessmentId"

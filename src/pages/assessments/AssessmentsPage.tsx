@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getAssessments } from '@/services/assessment.service'
 import type { Assessment } from '@/types/assessment'
-import { Button } from 'radix-ui/toolbar'
+import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 
 export function AssessmentsPage() {
@@ -32,13 +32,23 @@ export function AssessmentsPage() {
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-10">
       <div className="mx-auto max-w-5xl">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Technical Assessments
-        </h1>
+              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Technical Assessments
+          </h1>
 
-        <p className="mt-2 text-slate-600">
-          Select an assessment to start your technical evaluation.
-        </p>
+          <p className="mt-2 text-slate-600">
+            Select an assessment to start your technical evaluation.
+          </p>
+        </div>
+
+        <Button asChild>
+          <Link to="/assessments/new">
+            Create assessment
+          </Link>
+        </Button>
+      </div>
 
         {isLoading && (
           <p className="mt-8 text-slate-500">Loading assessments...</p>

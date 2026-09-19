@@ -28,3 +28,21 @@ export async function submitAnswer(
 
   return response.json() as Promise<SubmissionResult>
 }
+
+export async function getSubmission(
+  submissionId: string,
+): Promise<SubmissionResult> {
+  const response = await fetch(
+    `${API_URL}/submissions/${submissionId}`,
+  )
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('Submission not found')
+    }
+
+    throw new Error('Unable to load submission')
+  }
+
+  return response.json() as Promise<SubmissionResult>
+}

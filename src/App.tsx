@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { AssessmentsPage } from '@/pages/assessments/AssessmentsPage'
 import { QuestionSolvePage } from '@/pages/questions/QuestionSolvePage'
 import { AssessmentDetailPage } from './pages/assessments/AssessmentDetailPage'
+import { ResultsPage } from './pages/results/ResultsPage'
 
 function App() {
   return (
@@ -16,7 +17,12 @@ function App() {
         path="/assessments/:assessmentId"
         element={<AssessmentDetailPage />}
       />
+      <Route
+        path="/results/:submissionId"
+        element={<ResultsPage />}
+      />
     </Routes>
+    
   )
 }
 

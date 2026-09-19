@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { LanguageSelector } from '@/components/ui/code/LanguageSelector'
@@ -32,6 +32,7 @@ export function QuestionSolvePage() {
   const [result, setResult] = useState<ExecutionResult | null>(null)
   const [isRunning, setIsRunning] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const [candidate, setCandidate] = useState('')
 
@@ -121,6 +122,7 @@ export function QuestionSolvePage() {
       })
 
       setSubmissionResult(result)
+      navigate(`/results/${result.id}`)
     } catch (error) {
       const message =
         error instanceof Error

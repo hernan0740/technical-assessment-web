@@ -12,13 +12,19 @@ import {
 
 interface LanguageSelectorProps {
   value: ProgrammingLanguage
+  allowedLanguages: ProgrammingLanguage[]
   onChange: (language: ProgrammingLanguage) => void
 }
 
 export function LanguageSelector({
   value,
+  allowedLanguages,
   onChange,
 }: LanguageSelectorProps) {
+  const availableLanguages = PROGRAMMING_LANGUAGES.filter(
+    (language) => allowedLanguages.includes(language.value),
+  )
+
   return (
     <Select
       value={value}
@@ -31,7 +37,7 @@ export function LanguageSelector({
       </SelectTrigger>
 
       <SelectContent>
-        {PROGRAMMING_LANGUAGES.map((language) => (
+        {availableLanguages.map((language) => (
           <SelectItem
             key={language.value}
             value={language.value}

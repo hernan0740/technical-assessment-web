@@ -180,6 +180,7 @@ export function QuestionSolvePage() {
 
             <LanguageSelector
               value={language}
+              allowedLanguages={question.allowedLanguages}
               onChange={setLanguage}
             />
           </div>

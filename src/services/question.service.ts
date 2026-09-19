@@ -19,3 +19,17 @@ export async function getQuestion(
 
   return response.json() as Promise<Question>
 }
+
+export async function getQuestionsByAssessment(
+  assessmentId: string,
+): Promise<Question[]> {
+  const response = await fetch(
+    `${API_URL}/assessments/${assessmentId}/questions`,
+  )
+
+  if (!response.ok) {
+    throw new Error('Unable to load questions')
+  }
+
+  return response.json() as Promise<Question[]>
+}

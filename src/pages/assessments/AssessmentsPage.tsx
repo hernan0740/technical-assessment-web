@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getAssessments } from '@/services/assessment.service'
 import type { Assessment } from '@/types/assessment'
+import { Button } from 'radix-ui/toolbar'
+import { Link } from 'react-router-dom'
 
 export function AssessmentsPage() {
   const [assessments, setAssessments] = useState<Assessment[]>([])
@@ -55,21 +57,36 @@ export function AssessmentsPage() {
         <div className="mt-8 grid gap-4">
           {assessments.map((assessment) => (
             <article
-              key={assessment.id}
-              className="rounded-xl border bg-white p-6 shadow-sm"
-            >
-              <h2 className="text-xl font-semibold">
-                {assessment.name}
-              </h2>
+  key={assessment.id}
+  className="rounded-xl border bg-white p-6 shadow-sm"
+>
+  <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+    <div>
+      <h2 className="text-xl font-semibold">
+        {assessment.name}
+      </h2>
 
-              <p className="mt-2 text-slate-600">
-                {assessment.description}
-              </p>
+      <p className="mt-2 text-slate-600">
+        {assessment.description}
+      </p>
 
-              <div className="mt-4 flex gap-6 text-sm text-slate-500">
-                <span>{assessment.timeLimitMinutes} minutes</span>
-                <span>{assessment.questionCount} questions</span>
-              </div>
+      <div className="mt-4 flex gap-6 text-sm text-slate-500">
+        <span>
+          {assessment.timeLimitMinutes} minutes
+        </span>
+
+        <span>
+          {assessment.questionCount} questions
+        </span>
+      </div>
+    </div>
+
+    <Button asChild>
+      <Link to={`/assessments/${assessment.id}`}>
+        View assessment
+      </Link>
+    </Button>
+  </div>
             </article>
           ))}
         </div>

@@ -13,13 +13,23 @@ import type { ExecutionResult } from '@/types/execution'
 import type { ProgrammingLanguage } from '@/types/programming-language'
 import type { Question } from '@/types/question'
 import type { SubmissionResult } from '@/types/submission'
+import { useAssessmentTimer } from '@/hooks/useAssessmentTimer'
+
+function formatElapsedTime(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+}
+
 
 export function QuestionSolvePage() {
   const { assessmentId, questionId } = useParams<{
     assessmentId: string
     questionId: string
   }>()
-
+  
+  const { elapsedSeconds, stop } = useAssessmentTimer()
   const [language, setLanguage] =
     useState<ProgrammingLanguage>('javascript')
 
@@ -112,12 +122,13 @@ export function QuestionSolvePage() {
       setIsSubmitting(true)
       setSubmissionError(null)
       setSubmissionResult(null)
-
+      const timeSpentSeconds = stop()
       const result = await submitAnswer({
         assessmentId,
         questionId,
         candidate,
         language,
+        timeSpentSeconds,
         sourceCode: code,
       })
 
@@ -156,22 +167,34 @@ export function QuestionSolvePage() {
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-8">
       <div className="mx-auto max-w-6xl">
-        <header>
-          <p className="text-sm text-slate-500">
-            Programming question
-          </p>
+        <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+          <div>
+            <p className="text-sm text-slate-500">
+              Programming question
+            </p>
 
-          <h1 className="mt-1 text-2xl font-bold">
-            {question.title}
-          </h1>
+            <h1 className="mt-1 text-2xl font-bold">
+              {question.title}
+            </h1>
 
-          <p className="mt-3 max-w-3xl text-slate-600">
-            {question.description}
-          </p>
+            <p className="mt-3 max-w-3xl text-slate-600">
+              {question.description}
+            </p>
 
-          <p className="mt-2 text-sm text-slate-500">
-            Maximum score: {question.score} points
-          </p>
+            <p className="mt-2 text-sm text-slate-500">
+              Maximum score: {question.score} points
+            </p>
+          </div>
+
+          <div className="rounded-lg border bg-white px-4 py-3 shadow-sm">
+            <p className="text-xs text-slate-500">
+              Time elapsed
+            </p>
+
+            <p className="mt-1 font-mono text-xl font-semibold">
+              {formatElapsedTime(elapsedSeconds)}
+            </p>
+          </div>
         </header>
 
         <section className="mt-8 overflow-hidden rounded-xl border bg-white">

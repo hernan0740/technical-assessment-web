@@ -5,6 +5,17 @@ import { Button } from '@/components/ui/button'
 import { getSubmission } from '@/services/submission.service'
 import type { SubmissionResult } from '@/types/submission'
 
+function formatTimeSpent(totalSeconds: number) {
+  if (!Number.isFinite(totalSeconds)) {
+    return '-'
+  }
+
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+
+  return `${minutes}m ${seconds}s`
+}
+
 export function ResultsPage() {
   const { submissionId } = useParams<{
     submissionId: string
@@ -129,6 +140,16 @@ export function ResultsPage() {
                 {submission.passedTests} / {submission.totalTests}
               </p>
             </div>
+
+            <div>
+                <p className="text-sm text-slate-500">
+                    Time spent
+                </p>
+
+                <p className="mt-1 font-medium">
+                    {formatTimeSpent(submission.timeSpentSeconds)}
+                </p>
+                </div>
           </div>
         </section>
 

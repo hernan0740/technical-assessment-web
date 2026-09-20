@@ -12,6 +12,7 @@ export interface SubmitAnswerRequest {
   candidate: string
   language: ProgrammingLanguage
   sourceCode: string
+  timeSpentSeconds: number
 }
 
 export interface TestCaseResult {
@@ -34,4 +35,5 @@ export interface SubmissionResult {
   maxScore: number
   testResults: TestCaseResult[]
   createdAt: string
+  timeSpentSeconds: number
 }

@@ -4,6 +4,7 @@ import {
 } from 'react'
 
 import {
+  Link,
   useNavigate,
   useParams,
 } from 'react-router-dom'
@@ -12,31 +13,42 @@ import { Button } from '@/components/ui/button'
 import { CodeEditor } from '@/components/ui/code/CodeEditor'
 import { LanguageSelector } from '@/components/ui/code/LanguageSelector'
 import { COPY } from '@/constants/copy'
-import { useAssessmentTimer } from '@/hooks/useAssessmentTimer'
+
+import {
+  finishAssessmentByTimeout,
+  getAssessmentSession,
+  hasAssessmentTimeExpired,
+  registerAssessmentSubmission,
+} from '@/services/assessment-session.service'
 
 import { runCode } from '@/services/execution.service'
 import { getQuestion } from '@/services/question.service'
 import { submitAnswer } from '@/services/submission.service'
 
+import type { AssessmentSession } from '@/types/assessment-session'
 import type { ExecutionResult } from '@/types/execution'
 import type { ProgrammingLanguage } from '@/types/programming-language'
 import type { Question } from '@/types/question'
-import type { SubmissionResult } from '@/types/submission'
 
-function formatElapsedTime(
+function formatTime(
   totalSeconds: number,
 ) {
-  const minutes = Math.floor(
-    totalSeconds / 60,
-  )
+  const minutes =
+    Math.floor(
+      totalSeconds / 60,
+    )
 
   const seconds =
     totalSeconds % 60
 
-  return `${String(minutes).padStart(
+  return `${String(
+    minutes,
+  ).padStart(
     2,
     '0',
-  )}:${String(seconds).padStart(
+  )}:${String(
+    seconds,
+  ).padStart(
     2,
     '0',
   )}`
@@ -51,12 +63,23 @@ export function QuestionSolvePage() {
     questionId: string
   }>()
 
-  const navigate = useNavigate()
+  const navigate =
+    useNavigate()
 
-  const {
-    elapsedSeconds,
-    stop,
-  } = useAssessmentTimer()
+  const [
+    session,
+    setSession,
+  ] =
+    useState<AssessmentSession | null>(
+      null,
+    )
+
+  const [
+    now,
+    setNow,
+  ] = useState(
+    Date.now(),
+  )
 
   const [
     language,
@@ -72,16 +95,12 @@ export function QuestionSolvePage() {
   ] = useState('')
 
   const [
-    candidate,
-    setCandidate,
-  ] = useState('')
-
-  const [
     question,
     setQuestion,
-  ] = useState<Question | null>(
-    null,
-  )
+  ] =
+    useState<Question | null>(
+      null,
+    )
 
   const [
     selectedPublicTestCaseIndex,
@@ -96,9 +115,10 @@ export function QuestionSolvePage() {
   const [
     questionError,
     setQuestionError,
-  ] = useState<string | null>(
-    null,
-  )
+  ] =
+    useState<string | null>(
+      null,
+    )
 
   const [
     result,
@@ -111,42 +131,67 @@ export function QuestionSolvePage() {
   const [
     isRunning,
     setIsRunning,
-  ] = useState(false)
+  ] =
+    useState(false)
 
   const [
     error,
     setError,
-  ] = useState<string | null>(
-    null,
-  )
-
-  const [
-    submissionResult,
-    setSubmissionResult,
   ] =
-    useState<SubmissionResult | null>(
+    useState<string | null>(
       null,
     )
 
   const [
     isSubmitting,
     setIsSubmitting,
-  ] = useState(false)
+  ] =
+    useState(false)
 
   const [
     submissionError,
     setSubmissionError,
-  ] = useState<string | null>(
-    null,
-  )
+  ] =
+    useState<string | null>(
+      null,
+    )
 
+  /*
+   * Actualiza el reloj visual
+   * cada segundo.
+   */
+  useEffect(() => {
+    const intervalId =
+      window.setInterval(
+        () => {
+          setNow(
+            Date.now(),
+          )
+        },
+        1000,
+      )
+
+    return () => {
+      window.clearInterval(
+        intervalId,
+      )
+    }
+  }, [])
+
+  /*
+   * Carga y valida la sesión.
+   */
   useEffect(() => {
     const loadQuestion =
       async () => {
-        if (!questionId) {
+        if (
+          !assessmentId ||
+          !questionId
+        ) {
           setQuestionError(
-            COPY.solveQuestion.errors
-              .questionIdRequired,
+            COPY.solveQuestion
+              .errors
+              .missingIds,
           )
 
           setIsLoadingQuestion(
@@ -156,6 +201,115 @@ export function QuestionSolvePage() {
           return
         }
 
+        const activeSession =
+          getAssessmentSession(
+            assessmentId,
+          )
+
+        if (!activeSession) {
+          setQuestionError(
+            COPY.solveQuestion
+              .errors
+              .noActiveSession,
+          )
+
+          setIsLoadingQuestion(
+            false,
+          )
+
+          return
+        }
+
+        /*
+         * Si la prueba ya terminó,
+         * no permitimos volver
+         * a resolver preguntas.
+         */
+        if (
+          activeSession.completedAt
+        ) {
+          navigate(
+            `/assessments/${assessmentId}/results`,
+            {
+              replace: true,
+            },
+          )
+
+          return
+        }
+
+        /*
+         * También validamos el tiempo
+         * al entrar/refrescar la página.
+         */
+        if (
+          hasAssessmentTimeExpired(
+            activeSession,
+          )
+        ) {
+          finishAssessmentByTimeout(
+            assessmentId,
+          )
+
+          navigate(
+            `/assessments/${assessmentId}/results`,
+            {
+              replace: true,
+            },
+          )
+
+          return
+        }
+
+        const activeQuestion =
+          activeSession.questions[
+            activeSession
+              .currentQuestionIndex
+          ]
+
+        /*
+         * Evita saltarse preguntas
+         * modificando manualmente la URL.
+         */
+        if (
+          activeQuestion &&
+          activeQuestion.id !==
+            questionId
+        ) {
+          navigate(
+            `/assessments/${assessmentId}/questions/${activeQuestion.id}`,
+            {
+              replace: true,
+            },
+          )
+
+          return
+        }
+
+        setSession(
+          activeSession,
+        )
+
+        setIsLoadingQuestion(
+          true,
+        )
+
+        setQuestionError(
+          null,
+        )
+
+        setCode('')
+        setResult(null)
+        setError(null)
+
+        setSubmissionError(
+          null,
+        )
+
+        setSelectedPublicTestCaseIndex(
+          0,
+        )
+
         try {
           const data =
             await getQuestion(
@@ -163,10 +317,6 @@ export function QuestionSolvePage() {
             )
 
           setQuestion(data)
-
-          setSelectedPublicTestCaseIndex(
-            0,
-          )
 
           if (
             data.allowedLanguages
@@ -180,8 +330,8 @@ export function QuestionSolvePage() {
           }
         } catch {
           setQuestionError(
-            COPY.solveQuestion.errors
-              .load,
+            COPY.solveQuestion
+              .errors.load,
           )
         } finally {
           setIsLoadingQuestion(
@@ -191,24 +341,152 @@ export function QuestionSolvePage() {
       }
 
     void loadQuestion()
-  }, [questionId])
+  }, [
+    assessmentId,
+    questionId,
+    navigate,
+  ])
+
+  /*
+   * Detecta automáticamente cuando
+   * el tiempo llega a cero.
+   *
+   * Si justo se está enviando una
+   * respuesta, esperamos a que termine
+   * ese request para no perder una
+   * respuesta enviada a tiempo.
+   */
+  useEffect(() => {
+    if (
+      !assessmentId ||
+      !session ||
+      session.completedAt ||
+      isSubmitting
+    ) {
+      return
+    }
+
+    const timeLimitMilliseconds =
+      session.timeLimitMinutes *
+      60 *
+      1000
+
+    const elapsedMilliseconds =
+      now -
+      session.startedAt
+
+    if (
+      elapsedMilliseconds <
+      timeLimitMilliseconds
+    ) {
+      return
+    }
+
+    const updatedSession =
+      finishAssessmentByTimeout(
+        assessmentId,
+      )
+
+    if (!updatedSession) {
+      return
+    }
+
+    setSession(
+      updatedSession,
+    )
+
+    navigate(
+      `/assessments/${assessmentId}/results`,
+      {
+        replace: true,
+      },
+    )
+  }, [
+    assessmentId,
+    session,
+    now,
+    isSubmitting,
+    navigate,
+  ])
 
   const selectedPublicTestCase =
     question?.testCases[
       selectedPublicTestCaseIndex
     ] ?? null
 
+  const currentQuestionIndex =
+    session
+      ? session.questions.findIndex(
+          (
+            currentQuestion,
+          ) =>
+            currentQuestion.id ===
+            questionId,
+        )
+      : -1
+
+  const elapsedSeconds =
+    session
+      ? Math.max(
+          0,
+          Math.floor(
+            (now -
+              session.startedAt) /
+              1000,
+          ),
+        )
+      : 0
+
+  const totalTimeSeconds =
+    session
+      ? session.timeLimitMinutes *
+        60
+      : 0
+
+  const remainingSeconds =
+    Math.max(
+      0,
+      totalTimeSeconds -
+        elapsedSeconds,
+    )
+
   const handleRunCode =
     async () => {
+      if (
+        !session ||
+        hasAssessmentTimeExpired(
+          session,
+        )
+      ) {
+        if (assessmentId) {
+          finishAssessmentByTimeout(
+            assessmentId,
+          )
+
+          navigate(
+            `/assessments/${assessmentId}/results`,
+            {
+              replace: true,
+            },
+          )
+        }
+
+        return
+      }
+
       try {
         setIsRunning(true)
+
         setError(null)
         setResult(null)
 
         const executionResult =
           await runCode({
             language,
-            sourceCode: code,
+
+            sourceCode:
+              code,
+
             stdin:
               selectedPublicTestCase
                 ?.input ?? '',
@@ -219,8 +497,8 @@ export function QuestionSolvePage() {
         )
       } catch {
         setError(
-          COPY.solveQuestion.errors
-            .execution,
+          COPY.solveQuestion
+            .errors.execution,
         )
       } finally {
         setIsRunning(false)
@@ -231,54 +509,181 @@ export function QuestionSolvePage() {
     async () => {
       if (
         !assessmentId ||
-        !questionId
+        !questionId ||
+        !session
       ) {
         setSubmissionError(
-          COPY.solveQuestion.errors
+          COPY.solveQuestion
+            .errors
             .missingIds,
         )
 
         return
       }
 
-      try {
-        setIsSubmitting(true)
+      const currentSession =
+        getAssessmentSession(
+          assessmentId,
+        )
 
+      if (!currentSession) {
         setSubmissionError(
-          null,
+          COPY.solveQuestion
+            .errors
+            .noActiveSession,
         )
 
-        setSubmissionResult(
-          null,
+        return
+      }
+
+      /*
+       * Si ya se había agotado
+       * el tiempo antes de presionar
+       * Submit, no enviamos respuesta.
+       */
+      if (
+        hasAssessmentTimeExpired(
+          currentSession,
         )
-
-        const timeSpentSeconds =
-          stop()
-
-        const result =
-          await submitAnswer({
-            assessmentId,
-            questionId,
-            candidate,
-            language,
-            timeSpentSeconds,
-            sourceCode: code,
-          })
-
-        setSubmissionResult(
-          result,
+      ) {
+        finishAssessmentByTimeout(
+          assessmentId,
         )
 
         navigate(
-          `/results/${result.id}`,
+          `/assessments/${assessmentId}/results`,
+          {
+            replace: true,
+          },
+        )
+
+        return
+      }
+
+      try {
+        setIsSubmitting(
+          true,
+        )
+
+        setSubmissionError(
+          null,
+        )
+
+        /*
+         * Tiempo empleado únicamente
+         * en esta pregunta.
+         */
+        const timeSpentSeconds =
+          Math.max(
+            0,
+            Math.floor(
+              (Date.now() -
+                currentSession.questionStartedAt) /
+                1000,
+            ),
+          )
+
+        const submission =
+          await submitAnswer({
+            assessmentId,
+
+            questionId,
+
+            candidate:
+              currentSession.candidate,
+
+            language,
+
+            sourceCode:
+              code,
+
+            timeSpentSeconds,
+          })
+
+        const updatedSession =
+          registerAssessmentSubmission(
+            assessmentId,
+            submission,
+          )
+
+        if (!updatedSession) {
+          setSubmissionError(
+            COPY.solveQuestion
+              .errors
+              .sessionUpdate,
+          )
+
+          return
+        }
+
+        /*
+         * Si era la última pregunta,
+         * termina normalmente.
+         */
+        if (
+          updatedSession.completedAt
+        ) {
+          navigate(
+            `/assessments/${assessmentId}/results`,
+          )
+
+          return
+        }
+
+        /*
+         * La respuesta sí alcanzó
+         * a enviarse, pero puede que
+         * durante la ejecución de Judge0
+         * haya terminado el tiempo.
+         */
+        if (
+          hasAssessmentTimeExpired(
+            updatedSession,
+          )
+        ) {
+          finishAssessmentByTimeout(
+            assessmentId,
+          )
+
+          navigate(
+            `/assessments/${assessmentId}/results`,
+            {
+              replace: true,
+            },
+          )
+
+          return
+        }
+
+        const nextQuestion =
+          updatedSession.questions[
+            updatedSession
+              .currentQuestionIndex
+          ]
+
+        if (!nextQuestion) {
+          setSubmissionError(
+            COPY.solveQuestion
+              .errors
+              .nextQuestion,
+          )
+
+          return
+        }
+
+        navigate(
+          `/assessments/${assessmentId}/questions/${nextQuestion.id}`,
         )
       } catch {
         setSubmissionError(
-          COPY.solveQuestion.errors
+          COPY.solveQuestion
+            .errors
             .submission,
         )
       } finally {
-        setIsSubmitting(false)
+        setIsSubmitting(
+          false,
+        )
       }
     }
 
@@ -297,106 +702,151 @@ export function QuestionSolvePage() {
 
   if (
     questionError ||
-    !question
+    !question ||
+    !session
   ) {
     return (
       <main className="px-6 py-8">
-        <p className="text-red-600">
-          {questionError ??
-            COPY.solveQuestion
-              .errors
-              .questionNotFound}
-        </p>
+        <div className="mx-auto max-w-4xl">
+          <p className="text-red-600">
+            {questionError ??
+              COPY.solveQuestion
+                .errors
+                .questionNotFound}
+          </p>
+
+          {assessmentId && (
+            <Button
+              asChild
+              variant="outline"
+              className="mt-5"
+            >
+              <Link
+                to={`/assessments/${assessmentId}`}
+              >
+                {
+                  COPY
+                    .assessmentSession
+                    .back
+                }
+              </Link>
+            </Button>
+          )}
+        </div>
       </main>
     )
   }
 
+  const isTimeAlmostOver =
+    remainingSeconds <= 60
+
   return (
     <main className="px-6 py-8">
       <div className="mx-auto max-w-6xl">
-        <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-          <div>
-            <p className="text-sm text-slate-500">
-              {
-                COPY.solveQuestion
-                  .eyebrow
-              }
-            </p>
+        <div className="mb-6 rounded-xl border bg-white px-5 py-4 shadow-sm">
+          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+            <div>
+              <p className="text-sm font-medium text-[#0043A9]">
+                {
+                  session.assessmentName
+                }
+              </p>
 
-            <h1 className="mt-1 text-2xl font-bold">
-              {question.title}
-            </h1>
+              <p className="mt-1 text-sm text-slate-600">
+                {
+                  COPY.solveQuestion
+                    .labels
+                    .candidate
+                }
+                :{' '}
+                <strong className="text-slate-900">
+                  {
+                    session.candidate
+                  }
+                </strong>
+              </p>
+            </div>
 
-            <p className="mt-3 max-w-3xl text-slate-600">
-              {
-                question.description
-              }
-            </p>
+            <div className="text-left sm:text-right">
+              <p className="text-sm font-medium">
+                {
+                  COPY.solveQuestion
+                    .labels.question
+                }{' '}
+                {currentQuestionIndex +
+                  1}{' '}
+                {
+                  COPY.solveQuestion
+                    .labels.of
+                }{' '}
+                {
+                  session.questions
+                    .length
+                }
+              </p>
 
-            <p className="mt-2 text-sm text-slate-500">
-              {
-                COPY.solveQuestion
-                  .labels
-                  .maximumScore
-              }
-              : {question.score}{' '}
-              {
-                COPY.solveQuestion
-                  .labels.points
-              }
-            </p>
+              <p
+                className={`mt-1 font-mono text-xl font-semibold ${
+                  isTimeAlmostOver
+                    ? 'text-red-600'
+                    : ''
+                }`}
+              >
+                {formatTime(
+                  remainingSeconds,
+                )}
+              </p>
+
+              <p className="text-xs text-slate-500">
+                {
+                  COPY.solveQuestion
+                    .labels
+                    .timeRemaining
+                }
+              </p>
+            </div>
           </div>
+        </div>
 
-          <div className="rounded-lg border bg-white px-4 py-3 shadow-sm">
-            <p className="text-xs text-slate-500">
-              {
-                COPY.solveQuestion
-                  .labels
-                  .timeElapsed
-              }
-            </p>
-
-            <p className="mt-1 font-mono text-xl font-semibold">
-              {formatElapsedTime(
-                elapsedSeconds,
-              )}
-            </p>
-          </div>
-        </header>
-
-        <section className="mt-8 rounded-xl border bg-white p-6 shadow-sm">
-          <label
-            htmlFor="candidate"
-            className="mb-2 block text-sm font-medium"
-          >
+        <header>
+          <p className="text-sm text-slate-500">
             {
               COPY.solveQuestion
-                .labels.candidate
+                .eyebrow
             }
-          </label>
+          </p>
 
-          <input
-            id="candidate"
-            value={candidate}
-            onChange={(event) =>
-              setCandidate(
-                event.target.value,
-              )
+          <h1 className="mt-1 text-2xl font-bold">
+            {question.title}
+          </h1>
+
+          <p className="mt-3 max-w-3xl text-slate-600">
+            {
+              question.description
             }
-            placeholder={
+          </p>
+
+          <p className="mt-2 text-sm text-slate-500">
+            {
               COPY.solveQuestion
-                .candidatePlaceholder
+                .labels
+                .maximumScore
             }
-            className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 sm:max-w-md"
-          />
-        </section>
+            : {question.score}{' '}
+            {
+              COPY.solveQuestion
+                .labels.points
+            }
+          </p>
+        </header>
 
         <section className="mt-6 rounded-xl border bg-white p-6 shadow-sm">
           <div>
             <h2 className="text-lg font-semibold">
               {
                 COPY.solveQuestion
-                  .publicTests.title
+                  .publicTests
+                  .title
               }
             </h2>
 
@@ -549,7 +999,6 @@ export function QuestionSolvePage() {
 
           <div className="flex justify-end gap-3 border-t p-4">
             <Button
-              className="bg-[#0043A9] text-white hover:bg-[#00388F]"
               variant="outline"
               onClick={
                 handleRunCode
@@ -577,17 +1026,23 @@ export function QuestionSolvePage() {
               disabled={
                 isSubmitting ||
                 isRunning ||
-                !code.trim() ||
-                !candidate.trim()
+                !code.trim()
               }
             >
               {isSubmitting
                 ? COPY
                     .solveQuestion
                     .submitting
-                : COPY
-                    .solveQuestion
-                    .submitAnswer}
+                : currentQuestionIndex ===
+                    session.questions
+                      .length -
+                      1
+                  ? COPY
+                      .solveQuestion
+                      .finishAssessment
+                  : COPY
+                      .solveQuestion
+                      .submitAnswer}
             </Button>
           </div>
         </section>
@@ -604,7 +1059,8 @@ export function QuestionSolvePage() {
             !error && (
               <p className="text-slate-400">
                 {
-                  COPY.solveQuestion
+                  COPY
+                    .solveQuestion
                     .console.empty
                 }
               </p>
@@ -686,81 +1142,6 @@ export function QuestionSolvePage() {
                 submissionError
               }
             </p>
-          </section>
-        )}
-
-        {submissionResult && (
-          <section className="mt-6 rounded-xl border bg-white p-5">
-            <h2 className="text-lg font-semibold">
-              {
-                COPY.results.title
-              }
-            </h2>
-
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <p>
-                {
-                  COPY.results.labels
-                    .status
-                }
-                :{' '}
-                <strong>
-                  {
-                    COPY
-                      .submissionStatus[
-                      submissionResult.status
-                    ]
-                  }
-                </strong>
-              </p>
-
-              <p>
-                {
-                  COPY.results.labels
-                    .score
-                }
-                :{' '}
-                <strong>
-                  {
-                    submissionResult.score
-                  }{' '}
-                  /{' '}
-                  {
-                    submissionResult.maxScore
-                  }
-                </strong>
-              </p>
-
-              <p>
-                {
-                  COPY.results.labels
-                    .testsPassed
-                }
-                :{' '}
-                <strong>
-                  {
-                    submissionResult.passedTests
-                  }{' '}
-                  /{' '}
-                  {
-                    submissionResult.totalTests
-                  }
-                </strong>
-              </p>
-
-              <p>
-                {
-                  COPY.results.labels
-                    .candidate
-                }
-                :{' '}
-                <strong>
-                  {
-                    submissionResult.candidate
-                  }
-                </strong>
-              </p>
-            </div>
           </section>
         )}
       </div>

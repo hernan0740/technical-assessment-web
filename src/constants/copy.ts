@@ -59,10 +59,17 @@ export const COPY = {
     },
 
     units: {
-      minute: 'minuto',
-      minutes: 'minutos',
-      question: 'pregunta',
-      questions: 'preguntas',
+      minute:
+        'minuto',
+
+      minutes:
+        'minutos',
+
+      question:
+        'pregunta',
+
+      questions:
+        'preguntas',
     },
 
     errors: {
@@ -112,7 +119,7 @@ export const COPY = {
       '¿Estás seguro de eliminar esta pregunta? También se eliminarán los resultados asociados.',
 
     loading:
-      'Cargando preguntas...',
+      'Cargando evaluación...',
 
     empty: {
       title:
@@ -138,11 +145,31 @@ export const COPY = {
         'El identificador de la evaluación es obligatorio.',
 
       load:
-        'No fue posible cargar las preguntas.',
+        'No fue posible cargar la evaluación.',
 
       delete:
         'No fue posible eliminar la pregunta.',
     },
+  },
+
+  assessmentSession: {
+    title:
+      'Iniciar evaluación',
+
+    description:
+      'Ingresa el nombre del candidato. Al iniciar, las preguntas se resolverán de forma consecutiva y el tiempo será continuo durante toda la evaluación.',
+
+    candidate:
+      'Nombre del candidato',
+
+    candidatePlaceholder:
+      'Ej. Hernan Chapid',
+
+    start:
+      'Iniciar evaluación',
+
+    back:
+      'Volver a la evaluación',
   },
 
   createAssessment: {
@@ -407,8 +434,8 @@ export const COPY = {
       points:
         'puntos',
 
-      timeElapsed:
-        'Tiempo transcurrido',
+      timeRemaining:
+        'Tiempo restante',
 
       code:
         'Código',
@@ -424,10 +451,13 @@ export const COPY = {
 
       status:
         'Estado',
-    },
 
-    candidatePlaceholder:
-      'Ingresa el nombre del candidato',
+      question:
+        'Pregunta',
+
+      of:
+        'de',
+    },
 
     publicTests: {
       title:
@@ -459,7 +489,10 @@ export const COPY = {
       'Ejecutando...',
 
     submitAnswer:
-      'Enviar respuesta',
+      'Enviar y continuar',
+
+    finishAssessment:
+      'Finalizar evaluación',
 
     submitting:
       'Enviando...',
@@ -493,6 +526,71 @@ export const COPY = {
 
       missingIds:
         'No se encontró la evaluación o la pregunta.',
+
+      noActiveSession:
+        'No existe una evaluación en curso. Inicia la evaluación desde su detalle.',
+
+      sessionUpdate:
+        'No fue posible actualizar el progreso de la evaluación.',
+
+      nextQuestion:
+        'No fue posible encontrar la siguiente pregunta.',
+    },
+  },
+
+  assessmentResults: {
+    eyebrow:
+      'Evaluación finalizada',
+
+    title:
+      'Resultado final',
+
+    back:
+      'Volver a evaluaciones',
+
+    finish:
+      'Finalizar y volver a evaluaciones',
+
+    questionsTitle:
+      'Resultado por pregunta',
+
+    testsPassed:
+      'casos aprobados',
+
+    unanswered:
+      'Sin respuesta registrada',
+
+    timeExpired: {
+      title:
+        'Tiempo agotado',
+
+      description:
+        'El tiempo límite de la evaluación terminó. Se conservaron los resultados obtenidos hasta ese momento y las preguntas no respondidas se calificaron con cero puntos.',
+    },
+
+    labels: {
+      candidate:
+        'Candidato',
+
+      score:
+        'Puntaje obtenido',
+
+      correctQuestions:
+        'Preguntas correctas',
+
+      timeSpent:
+        'Tiempo empleado',
+
+      correct:
+        'preguntas correctas',
+
+      incorrect:
+        'preguntas incorrectas',
+    },
+
+    errors: {
+      notFound:
+        'No se encontró información de la evaluación finalizada.',
     },
   },
 

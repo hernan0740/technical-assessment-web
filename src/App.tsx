@@ -6,8 +6,8 @@ import {
 
 import { AppLayout } from '@/components/layout/AppLayout'
 
-import { AssessmentsPage } from '@/pages/assessments/AssessmentsPage'
 import { AssessmentDetailPage } from '@/pages/assessments/AssessmentDetailPage'
+import { AssessmentsPage } from '@/pages/assessments/AssessmentsPage'
 import { CreateAssessmentPage } from '@/pages/assessments/CreateAssessmentPage'
 import { EditAssessmentPage } from '@/pages/assessments/EditAssessmentPage'
 
@@ -15,12 +15,17 @@ import { CreateQuestionPage } from '@/pages/questions/CreateQuestionPage'
 import { EditQuestionPage } from '@/pages/questions/EditQuestionPage'
 import { QuestionSolvePage } from '@/pages/questions/QuestionSolvePage'
 
+import { AssessmentResultsPage } from '@/pages/results/AssessmentResultsPage'
 import { ResultsPage } from '@/pages/results/ResultsPage'
 
 function App() {
   return (
     <Routes>
-      <Route element={<AppLayout />}>
+      <Route
+        element={
+          <AppLayout />
+        }
+      >
         <Route
           path="/"
           element={
@@ -49,6 +54,13 @@ function App() {
           path="/assessments/:assessmentId/edit"
           element={
             <EditAssessmentPage />
+          }
+        />
+
+        <Route
+          path="/assessments/:assessmentId/results"
+          element={
+            <AssessmentResultsPage />
           }
         />
 

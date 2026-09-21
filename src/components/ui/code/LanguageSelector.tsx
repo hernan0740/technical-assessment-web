@@ -5,6 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { COPY } from '@/constants/copy'
 import {
   PROGRAMMING_LANGUAGES,
   type ProgrammingLanguage,
@@ -33,7 +34,9 @@ export function LanguageSelector({
       }
     >
       <SelectTrigger className="w-48">
-        <SelectValue placeholder="Select language" />
+        <SelectValue placeholder={
+            COPY.common.languageSelector.placeholder
+          } />
       </SelectTrigger>
 
       <SelectContent>
@@ -42,7 +45,7 @@ export function LanguageSelector({
             key={language.value}
             value={language.value}
           >
-            {language.label}
+             {COPY.languages[language.value]}
           </SelectItem>
         ))}
       </SelectContent>

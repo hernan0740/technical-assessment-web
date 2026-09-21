@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
+import { COPY } from '@/constants/copy'
 import { createAssessment } from '@/services/assessment.service'
 
 export function CreateAssessmentPage() {
@@ -32,13 +33,8 @@ export function CreateAssessmentPage() {
       })
 
       navigate(`/assessments/${assessment.id}`)
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Unable to create assessment'
-
-      setError(message)
+    } catch {
+      setError(COPY.createAssessment.errors.create)
     } finally {
       setIsSubmitting(false)
     }
@@ -51,20 +47,20 @@ export function CreateAssessmentPage() {
           to="/assessments"
           className="text-sm text-slate-500 hover:text-slate-900"
         >
-          ← Back to assessments
+          ← {COPY.createAssessment.back}
         </Link>
 
         <header className="mt-6">
           <p className="text-sm text-slate-500">
-            Technical Assessment
+            {COPY.createAssessment.eyebrow}
           </p>
 
           <h1 className="mt-1 text-3xl font-bold tracking-tight">
-            Create assessment
+            {COPY.createAssessment.title}
           </h1>
 
           <p className="mt-2 text-slate-600">
-            Define the basic information for the technical assessment.
+            {COPY.createAssessment.description}
           </p>
         </header>
 
@@ -77,14 +73,19 @@ export function CreateAssessmentPage() {
               htmlFor="name"
               className="mb-2 block text-sm font-medium"
             >
-              Name
+              {COPY.createAssessment.fields.name}
             </label>
 
             <input
               id="name"
               value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="Assessment Full Stack"
+              onChange={(event) =>
+                setName(event.target.value)
+              }
+              placeholder={
+                COPY.createAssessment.fields
+                  .namePlaceholder
+              }
               required
               className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2"
             />
@@ -95,7 +96,7 @@ export function CreateAssessmentPage() {
               htmlFor="description"
               className="mb-2 block text-sm font-medium"
             >
-              Description
+              {COPY.createAssessment.fields.description}
             </label>
 
             <textarea
@@ -104,7 +105,10 @@ export function CreateAssessmentPage() {
               onChange={(event) =>
                 setDescription(event.target.value)
               }
-              placeholder="Describe the assessment..."
+              placeholder={
+                COPY.createAssessment.fields
+                  .descriptionPlaceholder
+              }
               required
               rows={4}
               className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2"
@@ -117,7 +121,7 @@ export function CreateAssessmentPage() {
                 htmlFor="timeLimitMinutes"
                 className="mb-2 block text-sm font-medium"
               >
-                Time limit
+                {COPY.createAssessment.fields.timeLimit}
               </label>
 
               <input
@@ -140,7 +144,10 @@ export function CreateAssessmentPage() {
                 htmlFor="questionCount"
                 className="mb-2 block text-sm font-medium"
               >
-                Question count
+                {
+                  COPY.createAssessment.fields
+                    .questionCount
+                }
               </label>
 
               <input
@@ -167,6 +174,7 @@ export function CreateAssessmentPage() {
 
           <div className="flex justify-end">
             <Button
+              className="bg-[#0043A9] text-white hover:bg-[#00388F]"
               type="submit"
               disabled={
                 isSubmitting ||
@@ -175,8 +183,8 @@ export function CreateAssessmentPage() {
               }
             >
               {isSubmitting
-                ? 'Creating...'
-                : 'Create assessment'}
+                ? COPY.createAssessment.submitting
+                : COPY.createAssessment.submit}
             </Button>
           </div>
         </form>

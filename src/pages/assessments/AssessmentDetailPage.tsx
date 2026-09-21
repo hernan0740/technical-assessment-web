@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
+import { COPY } from '@/constants/copy'
 import { getQuestionsByAssessment } from '@/services/question.service'
+
 import type { Question } from '@/types/question'
 
 export function AssessmentDetailPage() {
@@ -17,7 +19,9 @@ export function AssessmentDetailPage() {
   useEffect(() => {
     const loadQuestions = async () => {
       if (!assessmentId) {
-        setError('Assessment id is required')
+        setError(
+          COPY.assessmentDetail.errors.assessmentIdRequired,
+        )
         setIsLoading(false)
         return
       }
@@ -28,13 +32,8 @@ export function AssessmentDetailPage() {
         )
 
         setQuestions(data)
-      } catch (error) {
-        const message =
-          error instanceof Error
-            ? error.message
-            : 'Unable to load questions'
-
-        setError(message)
+      } catch {
+        setError(COPY.assessmentDetail.errors.load)
       } finally {
         setIsLoading(false)
       }
@@ -50,31 +49,30 @@ export function AssessmentDetailPage() {
           to="/assessments"
           className="text-sm text-slate-500 hover:text-slate-900"
         >
-          ← Back to assessments
+          ← {COPY.assessmentDetail.back}
         </Link>
 
         <div className="mt-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <p className="text-sm text-slate-500">
-              Technical Assessment
+              {COPY.assessmentDetail.eyebrow}
             </p>
 
             <h1 className="mt-1 text-3xl font-bold tracking-tight">
-              Assessment questions
+              {COPY.assessmentDetail.title}
             </h1>
 
             <p className="mt-2 text-slate-600">
-              Review the programming questions available for
-              this assessment.
+              {COPY.assessmentDetail.description}
             </p>
           </div>
 
           {assessmentId && (
-            <Button asChild>
+            <Button asChild className="bg-[#0043A9] text-white hover:bg-[#00388F]">
               <Link
                 to={`/assessments/${assessmentId}/questions/new`}
               >
-                Create question
+                {COPY.assessmentDetail.createQuestion}
               </Link>
             </Button>
           )}
@@ -82,7 +80,7 @@ export function AssessmentDetailPage() {
 
         {isLoading && (
           <p className="mt-8 text-slate-500">
-            Loading questions...
+            {COPY.assessmentDetail.loading}
           </p>
         )}
 
@@ -97,12 +95,11 @@ export function AssessmentDetailPage() {
           questions.length === 0 && (
             <div className="mt-8 rounded-xl border bg-white p-8 text-center shadow-sm">
               <h2 className="text-lg font-semibold">
-                No questions available
+                {COPY.assessmentDetail.empty.title}
               </h2>
 
               <p className="mt-2 text-sm text-slate-500">
-                This assessment does not have programming
-                questions yet.
+                {COPY.assessmentDetail.empty.description}
               </p>
 
               {assessmentId && (
@@ -113,7 +110,10 @@ export function AssessmentDetailPage() {
                   <Link
                     to={`/assessments/${assessmentId}/questions/new`}
                   >
-                    Create first question
+                    {
+                      COPY.assessmentDetail
+                        .createFirstQuestion
+                    }
                   </Link>
                 </Button>
               )}
@@ -132,7 +132,11 @@ export function AssessmentDetailPage() {
                   <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
                     <div>
                       <p className="text-sm text-slate-500">
-                        Question {index + 1}
+                        {
+                          COPY.assessmentDetail.labels
+                            .question
+                        }{' '}
+                        {index + 1}
                       </p>
 
                       <h2 className="mt-1 text-xl font-semibold">
@@ -145,23 +149,39 @@ export function AssessmentDetailPage() {
 
                       <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-500">
                         <span>
-                          Score: {question.score}
+                          {
+                            COPY.assessmentDetail.labels
+                              .score
+                          }
+                          : {question.score}
                         </span>
 
                         <span>
-                          Languages:{' '}
-                          {question.allowedLanguages.join(
-                            ', ',
-                          )}
+                          {
+                            COPY.assessmentDetail.labels
+                              .languages
+                          }
+                          :{' '}
+                          {question.allowedLanguages
+                            .map(
+                              (language) =>
+                                COPY.languages[
+                                  language
+                                ],
+                            )
+                            .join(', ')}
                         </span>
                       </div>
                     </div>
 
-                    <Button asChild>
+                    <Button asChild className="bg-[#0043A9] text-white hover:bg-[#00388F]">
                       <Link
                         to={`/assessments/${assessmentId}/questions/${question.id}`}
                       >
-                        Solve question
+                        {
+                          COPY.assessmentDetail
+                            .solveQuestion
+                        }
                       </Link>
                     </Button>
                   </div>

@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
+import { COPY } from '@/constants/copy'
 import { createQuestion } from '@/services/question.service'
 import {
   PROGRAMMING_LANGUAGES,
@@ -30,9 +31,9 @@ export function CreateQuestionPage() {
     ProgrammingLanguage[]
   >(['java', 'javascript', 'python'])
 
-  const [testCases, setTestCases] = useState<CreateTestCaseRequest[]>([
-    { ...EMPTY_TEST_CASE },
-  ])
+  const [testCases, setTestCases] = useState<
+    CreateTestCaseRequest[]
+  >([{ ...EMPTY_TEST_CASE }])
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -90,13 +91,16 @@ export function CreateQuestionPage() {
     event.preventDefault()
 
     if (!assessmentId) {
-      setError('Assessment id is required')
+      setError(
+        COPY.createQuestion.errors
+          .assessmentIdRequired,
+      )
       return
     }
 
     if (allowedLanguages.length === 0) {
       setError(
-        'Select at least one programming language',
+        COPY.createQuestion.errors.languageRequired,
       )
       return
     }
@@ -114,13 +118,8 @@ export function CreateQuestionPage() {
       })
 
       navigate(`/assessments/${assessmentId}`)
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Unable to create question'
-
-      setError(message)
+    } catch {
+      setError(COPY.createQuestion.errors.create)
     } finally {
       setIsSubmitting(false)
     }
@@ -133,20 +132,20 @@ export function CreateQuestionPage() {
           to={`/assessments/${assessmentId}`}
           className="text-sm text-slate-500 hover:text-slate-900"
         >
-          ← Back to assessment
+          ← {COPY.createQuestion.back}
         </Link>
 
         <header className="mt-6">
           <p className="text-sm text-slate-500">
-            Technical Assessment
+            {COPY.createQuestion.eyebrow}
           </p>
 
           <h1 className="mt-1 text-3xl font-bold tracking-tight">
-            Create question
+            {COPY.createQuestion.title}
           </h1>
 
           <p className="mt-2 text-slate-600">
-            Configure the programming exercise and its test cases.
+            {COPY.createQuestion.description}
           </p>
         </header>
 
@@ -160,7 +159,7 @@ export function CreateQuestionPage() {
                 htmlFor="title"
                 className="mb-2 block text-sm font-medium"
               >
-                Title
+                {COPY.createQuestion.fields.title}
               </label>
 
               <input
@@ -169,7 +168,10 @@ export function CreateQuestionPage() {
                 onChange={(event) =>
                   setTitle(event.target.value)
                 }
-                placeholder="Find the maximum value"
+                placeholder={
+                  COPY.createQuestion.fields
+                    .titlePlaceholder
+                }
                 required
                 className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2"
               />
@@ -180,7 +182,7 @@ export function CreateQuestionPage() {
                 htmlFor="description"
                 className="mb-2 block text-sm font-medium"
               >
-                Description
+                {COPY.createQuestion.fields.description}
               </label>
 
               <textarea
@@ -189,7 +191,10 @@ export function CreateQuestionPage() {
                 onChange={(event) =>
                   setDescription(event.target.value)
                 }
-                placeholder="Describe what the candidate must implement..."
+                placeholder={
+                  COPY.createQuestion.fields
+                    .descriptionPlaceholder
+                }
                 required
                 rows={5}
                 className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2"
@@ -201,7 +206,7 @@ export function CreateQuestionPage() {
                 htmlFor="score"
                 className="mb-2 block text-sm font-medium"
               >
-                Score
+                {COPY.createQuestion.fields.score}
               </label>
 
               <input
@@ -220,11 +225,11 @@ export function CreateQuestionPage() {
 
           <section className="rounded-xl border bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">
-              Allowed languages
+              {COPY.createQuestion.languages.title}
             </h2>
 
             <p className="mt-1 text-sm text-slate-500">
-              Select the languages candidates may use.
+              {COPY.createQuestion.languages.description}
             </p>
 
             <div className="mt-4 flex flex-wrap gap-4">
@@ -243,7 +248,7 @@ export function CreateQuestionPage() {
                     }
                   />
 
-                  {language.label}
+                  {COPY.languages[language.value]}
                 </label>
               ))}
             </div>
@@ -253,20 +258,24 @@ export function CreateQuestionPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold">
-                  Test cases
+                  {COPY.createQuestion.testCases.title}
                 </h2>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  Private test cases will never be exposed to the candidate.
+                  {
+                    COPY.createQuestion.testCases
+                      .description
+                  }
                 </p>
               </div>
 
               <Button
+                className="bg-[#0043A9] text-white hover:bg-[#00388F]"
                 type="button"
                 variant="outline"
                 onClick={addTestCase}
               >
-                Add test case
+                {COPY.createQuestion.testCases.add}
               </Button>
             </div>
 
@@ -278,18 +287,26 @@ export function CreateQuestionPage() {
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="font-medium">
-                      Test case {index + 1}
+                      {
+                        COPY.createQuestion.testCases
+                          .testCase
+                      }{' '}
+                      {index + 1}
                     </h3>
 
                     {testCases.length > 1 && (
                       <Button
+                        className="bg-[#0043A9] text-white hover:bg-[#00388F]"
                         type="button"
                         variant="outline"
                         onClick={() =>
                           removeTestCase(index)
                         }
                       >
-                        Remove
+                        {
+                          COPY.createQuestion.testCases
+                            .remove
+                        }
                       </Button>
                     )}
                   </div>
@@ -300,7 +317,10 @@ export function CreateQuestionPage() {
                         htmlFor={`input-${index}`}
                         className="mb-2 block text-sm font-medium"
                       >
-                        Input
+                        {
+                          COPY.createQuestion.testCases
+                            .input
+                        }
                       </label>
 
                       <textarea
@@ -313,7 +333,10 @@ export function CreateQuestionPage() {
                             event.target.value,
                           )
                         }
-                        placeholder="3 5 1 8"
+                        placeholder={
+                          COPY.createQuestion.testCases
+                            .inputPlaceholder
+                        }
                         required
                         rows={3}
                         className="w-full rounded-md border px-3 py-2 font-mono text-sm outline-none focus:ring-2"
@@ -325,7 +348,10 @@ export function CreateQuestionPage() {
                         htmlFor={`output-${index}`}
                         className="mb-2 block text-sm font-medium"
                       >
-                        Expected output
+                        {
+                          COPY.createQuestion.testCases
+                            .expectedOutput
+                        }
                       </label>
 
                       <textarea
@@ -338,7 +364,10 @@ export function CreateQuestionPage() {
                             event.target.value,
                           )
                         }
-                        placeholder="8"
+                        placeholder={
+                          COPY.createQuestion.testCases
+                            .expectedOutputPlaceholder
+                        }
                         required
                         rows={3}
                         className="w-full rounded-md border px-3 py-2 font-mono text-sm outline-none focus:ring-2"
@@ -359,7 +388,10 @@ export function CreateQuestionPage() {
                       }
                     />
 
-                    Private test case
+                    {
+                      COPY.createQuestion.testCases
+                        .private
+                    }
                   </label>
                 </div>
               ))}
@@ -374,6 +406,7 @@ export function CreateQuestionPage() {
 
           <div className="flex justify-end">
             <Button
+              className="bg-[#0043A9] text-white hover:bg-[#00388F]"
               type="submit"
               disabled={
                 isSubmitting ||
@@ -384,8 +417,8 @@ export function CreateQuestionPage() {
               }
             >
               {isSubmitting
-                ? 'Creating...'
-                : 'Create question'}
+                ? COPY.createQuestion.submitting
+                : COPY.createQuestion.submit}
             </Button>
           </div>
         </form>

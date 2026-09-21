@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
+import { COPY } from '@/constants/copy'
 import { getSubmission } from '@/services/submission.service'
+
 import type { SubmissionResult } from '@/types/submission'
 
 function formatTimeSpent(totalSeconds: number) {
@@ -30,7 +32,9 @@ export function ResultsPage() {
   useEffect(() => {
     const loadSubmission = async () => {
       if (!submissionId) {
-        setError('Submission id is required')
+        setError(
+          COPY.results.errors.submissionIdRequired,
+        )
         setIsLoading(false)
         return
       }
@@ -39,13 +43,8 @@ export function ResultsPage() {
         const data = await getSubmission(submissionId)
 
         setSubmission(data)
-      } catch (error) {
-        const message =
-          error instanceof Error
-            ? error.message
-            : 'Unable to load submission'
-
-        setError(message)
+      } catch {
+        setError(COPY.results.errors.load)
       } finally {
         setIsLoading(false)
       }
@@ -57,7 +56,7 @@ export function ResultsPage() {
   if (isLoading) {
     return (
       <main className="min-h-screen bg-slate-50 px-6 py-10">
-        <p>Loading results...</p>
+        <p>{COPY.results.loading}</p>
       </main>
     )
   }
@@ -66,7 +65,7 @@ export function ResultsPage() {
     return (
       <main className="min-h-screen bg-slate-50 px-6 py-10">
         <p className="text-red-600">
-          {error ?? 'Submission not found'}
+          {error ?? COPY.results.notFound}
         </p>
       </main>
     )
@@ -77,15 +76,15 @@ export function ResultsPage() {
       <div className="mx-auto max-w-4xl">
         <header>
           <p className="text-sm text-slate-500">
-            Technical Assessment Result
+            {COPY.results.eyebrow}
           </p>
 
           <h1 className="mt-1 text-3xl font-bold tracking-tight">
-            Submission Result
+            {COPY.results.title}
           </h1>
 
           <p className="mt-2 text-slate-600">
-            Review the result of your submitted solution.
+            {COPY.results.description}
           </p>
         </header>
 
@@ -93,27 +92,32 @@ export function ResultsPage() {
           <div className="grid gap-6 sm:grid-cols-2">
             <div>
               <p className="text-sm text-slate-500">
-                Status
+                {COPY.results.labels.status}
               </p>
 
               <p className="mt-1 text-xl font-semibold">
-                {submission.status}
+                {
+                  COPY.submissionStatus[
+                    submission.status
+                  ]
+                }
               </p>
             </div>
 
             <div>
               <p className="text-sm text-slate-500">
-                Score
+                {COPY.results.labels.score}
               </p>
 
               <p className="mt-1 text-xl font-semibold">
-                {submission.score} / {submission.maxScore}
+                {submission.score} /{' '}
+                {submission.maxScore}
               </p>
             </div>
 
             <div>
               <p className="text-sm text-slate-500">
-                Candidate
+                {COPY.results.labels.candidate}
               </p>
 
               <p className="mt-1 font-medium">
@@ -123,39 +127,46 @@ export function ResultsPage() {
 
             <div>
               <p className="text-sm text-slate-500">
-                Language
+                {COPY.results.labels.language}
               </p>
 
-              <p className="mt-1 font-medium capitalize">
-                {submission.language}
+              <p className="mt-1 font-medium">
+                {
+                  COPY.languages[
+                    submission.language
+                  ]
+                }
               </p>
             </div>
 
             <div>
               <p className="text-sm text-slate-500">
-                Tests passed
+                {COPY.results.labels.testsPassed}
               </p>
 
               <p className="mt-1 font-medium">
-                {submission.passedTests} / {submission.totalTests}
+                {submission.passedTests} /{' '}
+                {submission.totalTests}
               </p>
             </div>
 
             <div>
-                <p className="text-sm text-slate-500">
-                    Time spent
-                </p>
+              <p className="text-sm text-slate-500">
+                {COPY.results.labels.timeSpent}
+              </p>
 
-                <p className="mt-1 font-medium">
-                    {formatTimeSpent(submission.timeSpentSeconds)}
-                </p>
-                </div>
+              <p className="mt-1 font-medium">
+                {formatTimeSpent(
+                  submission.timeSpentSeconds,
+                )}
+              </p>
+            </div>
           </div>
         </section>
 
         <section className="mt-6 rounded-xl border bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold">
-            Test Results
+            {COPY.results.testResults.title}
           </h2>
 
           <div className="mt-4 space-y-3">
@@ -166,13 +177,19 @@ export function ResultsPage() {
               >
                 <div>
                   <p className="font-medium">
-                    Test case {test.index}
+                    {
+                      COPY.results.testResults
+                        .testCase
+                    }{' '}
+                    {test.index}
                   </p>
 
                   <p className="text-sm text-slate-500">
                     {test.isPrivate
-                      ? 'Private test case'
-                      : 'Public test case'}
+                      ? COPY.results.testResults
+                          .private
+                      : COPY.results.testResults
+                          .public}
                   </p>
                 </div>
 
@@ -184,11 +201,19 @@ export function ResultsPage() {
                         : 'font-semibold text-red-600'
                     }
                   >
-                    {test.passed ? 'Passed' : 'Failed'}
+                    {test.passed
+                      ? COPY.results.testResults
+                          .passed
+                      : COPY.results.testResults
+                          .failed}
                   </p>
 
                   <p className="text-xs text-slate-500">
-                    {test.executionStatus}
+                    {
+                      COPY.executionStatus[
+                        test.executionStatus
+                      ]
+                    }
                   </p>
                 </div>
               </div>
@@ -197,9 +222,13 @@ export function ResultsPage() {
         </section>
 
         <div className="mt-6">
-          <Button asChild variant="outline">
+          <Button
+            className="bg-[#0043A9] text-white hover:bg-[#00388F]"
+            asChild
+            variant="outline"
+          >
             <Link to="/assessments">
-              Back to assessments
+              {COPY.results.back}
             </Link>
           </Button>
         </div>

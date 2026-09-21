@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useState,
   type FormEvent,
 } from 'react'
@@ -6,14 +7,23 @@ import {
 import {
   Link,
   useNavigate,
+  useParams,
 } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { COPY } from '@/constants/copy'
 
-import { createAssessment } from '@/services/assessment.service'
+import {
+  getAssessmentById,
+  updateAssessment,
+} from '@/services/assessment.service'
 
-export function CreateAssessmentPage() {
+export function EditAssessmentPage() {
+  const { assessmentId } =
+    useParams<{
+      assessmentId: string
+    }>()
+
   const navigate =
     useNavigate()
 
@@ -33,6 +43,11 @@ export function CreateAssessmentPage() {
   ] = useState(60)
 
   const [
+    isLoading,
+    setIsLoading,
+  ] = useState(true)
+
+  const [
     isSubmitting,
     setIsSubmitting,
   ] = useState(false)
@@ -44,46 +59,115 @@ export function CreateAssessmentPage() {
     null,
   )
 
+  useEffect(() => {
+    const loadAssessment =
+      async () => {
+        if (!assessmentId) {
+          setError(
+            COPY.editAssessment
+              .errors
+              .assessmentIdRequired,
+          )
+
+          setIsLoading(false)
+          return
+        }
+
+        try {
+          const assessment =
+            await getAssessmentById(
+              assessmentId,
+            )
+
+          setName(
+            assessment.name,
+          )
+
+          setDescription(
+            assessment.description,
+          )
+
+          setTimeLimitMinutes(
+            assessment.timeLimitMinutes,
+          )
+        } catch {
+          setError(
+            COPY.editAssessment
+              .errors.load,
+          )
+        } finally {
+          setIsLoading(false)
+        }
+      }
+
+    void loadAssessment()
+  }, [assessmentId])
+
   const handleSubmit = async (
     event:
       FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault()
 
+    if (!assessmentId) {
+      return
+    }
+
     try {
       setIsSubmitting(true)
       setError(null)
 
-      const assessment =
-        await createAssessment({
+      await updateAssessment(
+        assessmentId,
+        {
           name,
           description,
           timeLimitMinutes,
-        })
+        },
+      )
 
       navigate(
-        `/assessments/${assessment.id}`,
+        `/assessments/${assessmentId}`,
       )
     } catch {
       setError(
-        COPY.createAssessment
-          .errors.create,
+        COPY.editAssessment
+          .errors.update,
       )
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  if (isLoading) {
+    return (
+      <main className="px-6 py-10">
+        <div className="mx-auto max-w-2xl">
+          <p className="text-slate-500">
+            {
+              COPY.editAssessment
+                .loading
+            }
+          </p>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="px-6 py-10">
       <div className="mx-auto max-w-2xl">
         <Link
-          to="/assessments"
+          to={
+            assessmentId
+              ? `/assessments/${assessmentId}`
+              : '/assessments'
+          }
           className="text-sm text-slate-500 hover:text-slate-900"
         >
           ←{' '}
           {
-            COPY.createAssessment
+            COPY.editAssessment
               .back
           }
         </Link>
@@ -91,21 +175,21 @@ export function CreateAssessmentPage() {
         <header className="mt-6">
           <p className="text-sm text-slate-500">
             {
-              COPY.createAssessment
+              COPY.editAssessment
                 .eyebrow
             }
           </p>
 
           <h1 className="mt-1 text-3xl font-bold tracking-tight">
             {
-              COPY.createAssessment
+              COPY.editAssessment
                 .title
             }
           </h1>
 
           <p className="mt-2 text-slate-600">
             {
-              COPY.createAssessment
+              COPY.editAssessment
                 .description
             }
           </p>
@@ -123,7 +207,7 @@ export function CreateAssessmentPage() {
               className="mb-2 block text-sm font-medium"
             >
               {
-                COPY.createAssessment
+                COPY.editAssessment
                   .fields.name
               }
             </label>
@@ -137,7 +221,7 @@ export function CreateAssessmentPage() {
                 )
               }
               placeholder={
-                COPY.createAssessment
+                COPY.editAssessment
                   .fields
                   .namePlaceholder
               }
@@ -152,7 +236,7 @@ export function CreateAssessmentPage() {
               className="mb-2 block text-sm font-medium"
             >
               {
-                COPY.createAssessment
+                COPY.editAssessment
                   .fields
                   .description
               }
@@ -167,7 +251,7 @@ export function CreateAssessmentPage() {
                 )
               }
               placeholder={
-                COPY.createAssessment
+                COPY.editAssessment
                   .fields
                   .descriptionPlaceholder
               }
@@ -183,7 +267,7 @@ export function CreateAssessmentPage() {
               className="mb-2 block text-sm font-medium"
             >
               {
-                COPY.createAssessment
+                COPY.editAssessment
                   .fields
                   .timeLimit
               }
@@ -226,10 +310,10 @@ export function CreateAssessmentPage() {
             >
               {isSubmitting
                 ? COPY
-                    .createAssessment
+                    .editAssessment
                     .submitting
                 : COPY
-                    .createAssessment
+                    .editAssessment
                     .submit}
             </Button>
           </div>

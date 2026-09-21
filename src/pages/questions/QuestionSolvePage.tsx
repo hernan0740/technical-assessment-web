@@ -1,9 +1,16 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import {
+  useEffect,
+  useState,
+} from 'react'
+
+import {
+  useNavigate,
+  useParams,
+} from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
-import { LanguageSelector } from '@/components/ui/code/LanguageSelector'
 import { CodeEditor } from '@/components/ui/code/CodeEditor'
+import { LanguageSelector } from '@/components/ui/code/LanguageSelector'
 import { COPY } from '@/constants/copy'
 import { useAssessmentTimer } from '@/hooks/useAssessmentTimer'
 
@@ -16,161 +23,288 @@ import type { ProgrammingLanguage } from '@/types/programming-language'
 import type { Question } from '@/types/question'
 import type { SubmissionResult } from '@/types/submission'
 
-function formatElapsedTime(totalSeconds: number) {
-  const minutes = Math.floor(totalSeconds / 60)
-  const seconds = totalSeconds % 60
+function formatElapsedTime(
+  totalSeconds: number,
+) {
+  const minutes = Math.floor(
+    totalSeconds / 60,
+  )
 
-  return `${String(minutes).padStart(2, '0')}:${String(
-    seconds,
-  ).padStart(2, '0')}`
+  const seconds =
+    totalSeconds % 60
+
+  return `${String(minutes).padStart(
+    2,
+    '0',
+  )}:${String(seconds).padStart(
+    2,
+    '0',
+  )}`
 }
 
 export function QuestionSolvePage() {
-  const { assessmentId, questionId } = useParams<{
+  const {
+    assessmentId,
+    questionId,
+  } = useParams<{
     assessmentId: string
     questionId: string
   }>()
 
   const navigate = useNavigate()
-  const { elapsedSeconds, stop } = useAssessmentTimer()
 
-  const [language, setLanguage] =
-    useState<ProgrammingLanguage>('javascript')
+  const {
+    elapsedSeconds,
+    stop,
+  } = useAssessmentTimer()
 
-  const [code, setCode] = useState('')
+  const [
+    language,
+    setLanguage,
+  ] =
+    useState<ProgrammingLanguage>(
+      'javascript',
+    )
 
-  const [question, setQuestion] =
-    useState<Question | null>(null)
+  const [
+    code,
+    setCode,
+  ] = useState('')
 
-  const [isLoadingQuestion, setIsLoadingQuestion] =
-    useState(true)
+  const [
+    candidate,
+    setCandidate,
+  ] = useState('')
 
-  const [questionError, setQuestionError] =
-    useState<string | null>(null)
+  const [
+    question,
+    setQuestion,
+  ] = useState<Question | null>(
+    null,
+  )
 
-  const [result, setResult] =
-    useState<ExecutionResult | null>(null)
+  const [
+    selectedPublicTestCaseIndex,
+    setSelectedPublicTestCaseIndex,
+  ] = useState(0)
 
-  const [isRunning, setIsRunning] = useState(false)
+  const [
+    isLoadingQuestion,
+    setIsLoadingQuestion,
+  ] = useState(true)
 
-  const [error, setError] =
-    useState<string | null>(null)
+  const [
+    questionError,
+    setQuestionError,
+  ] = useState<string | null>(
+    null,
+  )
 
-  const [candidate, setCandidate] = useState('')
+  const [
+    result,
+    setResult,
+  ] =
+    useState<ExecutionResult | null>(
+      null,
+    )
 
-  const [submissionResult, setSubmissionResult] =
-    useState<SubmissionResult | null>(null)
+  const [
+    isRunning,
+    setIsRunning,
+  ] = useState(false)
 
-  const [isSubmitting, setIsSubmitting] =
-    useState(false)
+  const [
+    error,
+    setError,
+  ] = useState<string | null>(
+    null,
+  )
 
-  const [submissionError, setSubmissionError] =
-    useState<string | null>(null)
+  const [
+    submissionResult,
+    setSubmissionResult,
+  ] =
+    useState<SubmissionResult | null>(
+      null,
+    )
+
+  const [
+    isSubmitting,
+    setIsSubmitting,
+  ] = useState(false)
+
+  const [
+    submissionError,
+    setSubmissionError,
+  ] = useState<string | null>(
+    null,
+  )
 
   useEffect(() => {
-    const loadQuestion = async () => {
-      if (!questionId) {
-        setQuestionError(
-          COPY.solveQuestion.errors.questionIdRequired,
-        )
-        setIsLoadingQuestion(false)
-        return
-      }
+    const loadQuestion =
+      async () => {
+        if (!questionId) {
+          setQuestionError(
+            COPY.solveQuestion.errors
+              .questionIdRequired,
+          )
 
-      try {
-        const data = await getQuestion(questionId)
+          setIsLoadingQuestion(
+            false,
+          )
 
-        setQuestion(data)
-
-        if (data.allowedLanguages.length > 0) {
-          setLanguage(data.allowedLanguages[0])
+          return
         }
-      } catch {
-        setQuestionError(
-          COPY.solveQuestion.errors.load,
-        )
-      } finally {
-        setIsLoadingQuestion(false)
+
+        try {
+          const data =
+            await getQuestion(
+              questionId,
+            )
+
+          setQuestion(data)
+
+          setSelectedPublicTestCaseIndex(
+            0,
+          )
+
+          if (
+            data.allowedLanguages
+              .length > 0
+          ) {
+            setLanguage(
+              data.allowedLanguages[
+                0
+              ],
+            )
+          }
+        } catch {
+          setQuestionError(
+            COPY.solveQuestion.errors
+              .load,
+          )
+        } finally {
+          setIsLoadingQuestion(
+            false,
+          )
+        }
       }
-    }
 
     void loadQuestion()
   }, [questionId])
 
-  const handleRunCode = async () => {
-    try {
-      setIsRunning(true)
-      setError(null)
-      setResult(null)
+  const selectedPublicTestCase =
+    question?.testCases[
+      selectedPublicTestCaseIndex
+    ] ?? null
 
-      const executionResult = await runCode({
-        language,
-        sourceCode: code,
-        stdin: '',
-      })
+  const handleRunCode =
+    async () => {
+      try {
+        setIsRunning(true)
+        setError(null)
+        setResult(null)
 
-      setResult(executionResult)
-    } catch {
-      setError(
-        COPY.solveQuestion.errors.execution,
-      )
-    } finally {
-      setIsRunning(false)
+        const executionResult =
+          await runCode({
+            language,
+            sourceCode: code,
+            stdin:
+              selectedPublicTestCase
+                ?.input ?? '',
+          })
+
+        setResult(
+          executionResult,
+        )
+      } catch {
+        setError(
+          COPY.solveQuestion.errors
+            .execution,
+        )
+      } finally {
+        setIsRunning(false)
+      }
     }
-  }
 
-  const handleSubmitAnswer = async () => {
-    if (!assessmentId || !questionId) {
-      setSubmissionError(
-        COPY.solveQuestion.errors.missingIds,
-      )
-      return
+  const handleSubmitAnswer =
+    async () => {
+      if (
+        !assessmentId ||
+        !questionId
+      ) {
+        setSubmissionError(
+          COPY.solveQuestion.errors
+            .missingIds,
+        )
+
+        return
+      }
+
+      try {
+        setIsSubmitting(true)
+
+        setSubmissionError(
+          null,
+        )
+
+        setSubmissionResult(
+          null,
+        )
+
+        const timeSpentSeconds =
+          stop()
+
+        const result =
+          await submitAnswer({
+            assessmentId,
+            questionId,
+            candidate,
+            language,
+            timeSpentSeconds,
+            sourceCode: code,
+          })
+
+        setSubmissionResult(
+          result,
+        )
+
+        navigate(
+          `/results/${result.id}`,
+        )
+      } catch {
+        setSubmissionError(
+          COPY.solveQuestion.errors
+            .submission,
+        )
+      } finally {
+        setIsSubmitting(false)
+      }
     }
-
-    try {
-      setIsSubmitting(true)
-      setSubmissionError(null)
-      setSubmissionResult(null)
-
-      const timeSpentSeconds = stop()
-
-      const result = await submitAnswer({
-        assessmentId,
-        questionId,
-        candidate,
-        language,
-        timeSpentSeconds,
-        sourceCode: code,
-      })
-
-      setSubmissionResult(result)
-
-      navigate(`/results/${result.id}`)
-    } catch {
-      setSubmissionError(
-        COPY.solveQuestion.errors.submission,
-      )
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
 
   if (isLoadingQuestion) {
     return (
-      <main className="min-h-screen bg-slate-50 px-6 py-8">
+      <main className="px-6 py-8">
         <p>
-          {COPY.solveQuestion.loading}
+          {
+            COPY.solveQuestion
+              .loading
+          }
         </p>
       </main>
     )
   }
 
-  if (questionError || !question) {
+  if (
+    questionError ||
+    !question
+  ) {
     return (
-      <main className="min-h-screen bg-slate-50 px-6 py-8">
+      <main className="px-6 py-8">
         <p className="text-red-600">
           {questionError ??
-            COPY.solveQuestion.errors
+            COPY.solveQuestion
+              .errors
               .questionNotFound}
         </p>
       </main>
@@ -178,12 +312,15 @@ export function QuestionSolvePage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-8">
+    <main className="px-6 py-8">
       <div className="mx-auto max-w-6xl">
         <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
           <div>
             <p className="text-sm text-slate-500">
-              {COPY.solveQuestion.eyebrow}
+              {
+                COPY.solveQuestion
+                  .eyebrow
+              }
             </p>
 
             <h1 className="mt-1 text-2xl font-bold">
@@ -191,37 +328,206 @@ export function QuestionSolvePage() {
             </h1>
 
             <p className="mt-3 max-w-3xl text-slate-600">
-              {question.description}
+              {
+                question.description
+              }
             </p>
 
             <p className="mt-2 text-sm text-slate-500">
               {
-                COPY.solveQuestion.labels
+                COPY.solveQuestion
+                  .labels
                   .maximumScore
               }
               : {question.score}{' '}
-              {COPY.solveQuestion.labels.points}
+              {
+                COPY.solveQuestion
+                  .labels.points
+              }
             </p>
           </div>
 
           <div className="rounded-lg border bg-white px-4 py-3 shadow-sm">
             <p className="text-xs text-slate-500">
               {
-                COPY.solveQuestion.labels
+                COPY.solveQuestion
+                  .labels
                   .timeElapsed
               }
             </p>
 
             <p className="mt-1 font-mono text-xl font-semibold">
-              {formatElapsedTime(elapsedSeconds)}
+              {formatElapsedTime(
+                elapsedSeconds,
+              )}
             </p>
           </div>
         </header>
 
-        <section className="mt-8 overflow-hidden rounded-xl border bg-white">
+        <section className="mt-8 rounded-xl border bg-white p-6 shadow-sm">
+          <label
+            htmlFor="candidate"
+            className="mb-2 block text-sm font-medium"
+          >
+            {
+              COPY.solveQuestion
+                .labels.candidate
+            }
+          </label>
+
+          <input
+            id="candidate"
+            value={candidate}
+            onChange={(event) =>
+              setCandidate(
+                event.target.value,
+              )
+            }
+            placeholder={
+              COPY.solveQuestion
+                .candidatePlaceholder
+            }
+            className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 sm:max-w-md"
+          />
+        </section>
+
+        <section className="mt-6 rounded-xl border bg-white p-6 shadow-sm">
+          <div>
+            <h2 className="text-lg font-semibold">
+              {
+                COPY.solveQuestion
+                  .publicTests.title
+              }
+            </h2>
+
+            <p className="mt-1 text-sm text-slate-500">
+              {
+                COPY.solveQuestion
+                  .publicTests
+                  .description
+              }
+            </p>
+          </div>
+
+          {question.testCases
+            .length === 0 ? (
+            <p className="mt-4 text-sm text-slate-500">
+              {
+                COPY.solveQuestion
+                  .publicTests.empty
+              }
+            </p>
+          ) : (
+            <div className="mt-5 space-y-4">
+              {question.testCases
+                .length > 1 && (
+                <div className="max-w-xs">
+                  <label
+                    htmlFor="public-test-case"
+                    className="mb-2 block text-sm font-medium"
+                  >
+                    {
+                      COPY
+                        .solveQuestion
+                        .publicTests
+                        .select
+                    }
+                  </label>
+
+                  <select
+                    id="public-test-case"
+                    value={
+                      selectedPublicTestCaseIndex
+                    }
+                    onChange={(
+                      event,
+                    ) =>
+                      setSelectedPublicTestCaseIndex(
+                        Number(
+                          event
+                            .target
+                            .value,
+                        ),
+                      )
+                    }
+                    className="w-full rounded-md border bg-white px-3 py-2 text-sm outline-none focus:ring-2"
+                  >
+                    {question.testCases.map(
+                      (
+                        _,
+                        index,
+                      ) => (
+                        <option
+                          key={
+                            index
+                          }
+                          value={
+                            index
+                          }
+                        >
+                          {
+                            COPY
+                              .solveQuestion
+                              .publicTests
+                              .option
+                          }{' '}
+                          {index +
+                            1}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                </div>
+              )}
+
+              {selectedPublicTestCase && (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-lg border bg-slate-50 p-4">
+                    <p className="text-sm font-medium">
+                      {
+                        COPY
+                          .solveQuestion
+                          .publicTests
+                          .input
+                      }
+                    </p>
+
+                    <pre className="mt-2 whitespace-pre-wrap font-mono text-sm text-slate-700">
+                      {
+                        selectedPublicTestCase.input
+                      }
+                    </pre>
+                  </div>
+
+                  <div className="rounded-lg border bg-slate-50 p-4">
+                    <p className="text-sm font-medium">
+                      {
+                        COPY
+                          .solveQuestion
+                          .publicTests
+                          .expectedOutput
+                      }
+                    </p>
+
+                    <pre className="mt-2 whitespace-pre-wrap font-mono text-sm text-slate-700">
+                      {
+                        selectedPublicTestCase.expectedOutput
+                      }
+                    </pre>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+
+        <section className="mt-6 overflow-hidden rounded-xl border bg-white">
           <div className="flex items-center justify-between border-b p-4">
             <h2 className="font-semibold">
-              {COPY.solveQuestion.labels.code}
+              {
+                COPY.solveQuestion
+                  .labels.code
+              }
             </h2>
 
             <LanguageSelector
@@ -229,7 +535,9 @@ export function QuestionSolvePage() {
               allowedLanguages={
                 question.allowedLanguages
               }
-              onChange={setLanguage}
+              onChange={
+                setLanguage
+              }
             />
           </div>
 
@@ -239,36 +547,13 @@ export function QuestionSolvePage() {
             onChange={setCode}
           />
 
-          <div className="border-t p-4">
-            <label
-              htmlFor="candidate"
-              className="mb-2 block text-sm font-medium"
-            >
-              {
-                COPY.solveQuestion.labels
-                  .candidate
-              }
-            </label>
-
-            <input
-              id="candidate"
-              value={candidate}
-              onChange={(event) =>
-                setCandidate(event.target.value)
-              }
-              placeholder={
-                COPY.solveQuestion
-                  .candidatePlaceholder
-              }
-              className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2"
-            />
-          </div>
-
           <div className="flex justify-end gap-3 border-t p-4">
             <Button
               className="bg-[#0043A9] text-white hover:bg-[#00388F]"
               variant="outline"
-              onClick={handleRunCode}
+              onClick={
+                handleRunCode
+              }
               disabled={
                 isRunning ||
                 isSubmitting ||
@@ -276,13 +561,19 @@ export function QuestionSolvePage() {
               }
             >
               {isRunning
-                ? COPY.solveQuestion.running
-                : COPY.solveQuestion.runCode}
+                ? COPY
+                    .solveQuestion
+                    .running
+                : COPY
+                    .solveQuestion
+                    .runCode}
             </Button>
 
             <Button
               className="bg-[#0043A9] text-white hover:bg-[#00388F]"
-              onClick={handleSubmitAnswer}
+              onClick={
+                handleSubmitAnswer
+              }
               disabled={
                 isSubmitting ||
                 isRunning ||
@@ -291,22 +582,33 @@ export function QuestionSolvePage() {
               }
             >
               {isSubmitting
-                ? COPY.solveQuestion.submitting
-                : COPY.solveQuestion.submitAnswer}
+                ? COPY
+                    .solveQuestion
+                    .submitting
+                : COPY
+                    .solveQuestion
+                    .submitAnswer}
             </Button>
           </div>
         </section>
 
         <section className="mt-6 rounded-xl border bg-slate-950 p-5 text-sm text-slate-100">
           <h2 className="mb-3 font-semibold">
-            {COPY.solveQuestion.console.title}
+            {
+              COPY.solveQuestion
+                .console.title
+            }
           </h2>
 
-          {!result && !error && (
-            <p className="text-slate-400">
-              {COPY.solveQuestion.console.empty}
-            </p>
-          )}
+          {!result &&
+            !error && (
+              <p className="text-slate-400">
+                {
+                  COPY.solveQuestion
+                    .console.empty
+                }
+              </p>
+            )}
 
           {error && (
             <pre className="whitespace-pre-wrap text-red-400">
@@ -318,12 +620,13 @@ export function QuestionSolvePage() {
             <div className="space-y-2">
               <p>
                 {
-                  COPY.solveQuestion.labels
-                    .status
+                  COPY.solveQuestion
+                    .labels.status
                 }
                 :{' '}
                 {
-                  COPY.executionStatus[
+                  COPY
+                    .executionStatus[
                     result.status
                   ]
                 }
@@ -331,33 +634,46 @@ export function QuestionSolvePage() {
 
               {result.stdout && (
                 <pre className="whitespace-pre-wrap">
-                  {result.stdout}
+                  {
+                    result.stdout
+                  }
                 </pre>
               )}
 
               {result.compileOutput && (
                 <pre className="whitespace-pre-wrap text-amber-300">
-                  {result.compileOutput}
+                  {
+                    result.compileOutput
+                  }
                 </pre>
               )}
 
               {result.stderr && (
                 <pre className="whitespace-pre-wrap text-red-400">
-                  {result.stderr}
+                  {
+                    result.stderr
+                  }
                 </pre>
               )}
 
               <p className="text-xs text-slate-400">
                 {
-                  COPY.solveQuestion.labels
+                  COPY.solveQuestion
+                    .labels
                     .executionTime
                 }
-                : {result.time ?? '-'} s |{' '}
+                :{' '}
+                {result.time ??
+                  '-'}{' '}
+                s |{' '}
                 {
-                  COPY.solveQuestion.labels
-                    .memory
+                  COPY.solveQuestion
+                    .labels.memory
                 }
-                : {result.memory ?? '-'} KB
+                :{' '}
+                {result.memory ??
+                  '-'}{' '}
+                KB
               </p>
             </div>
           )}
@@ -366,7 +682,9 @@ export function QuestionSolvePage() {
         {submissionError && (
           <section className="mt-6 rounded-xl border border-red-200 bg-red-50 p-5">
             <p className="text-sm text-red-700">
-              {submissionError}
+              {
+                submissionError
+              }
             </p>
           </section>
         )}
@@ -374,15 +692,22 @@ export function QuestionSolvePage() {
         {submissionResult && (
           <section className="mt-6 rounded-xl border bg-white p-5">
             <h2 className="text-lg font-semibold">
-              {COPY.results.title}
+              {
+                COPY.results.title
+              }
             </h2>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <p>
-                {COPY.results.labels.status}:{' '}
+                {
+                  COPY.results.labels
+                    .status
+                }
+                :{' '}
                 <strong>
                   {
-                    COPY.submissionStatus[
+                    COPY
+                      .submissionStatus[
                       submissionResult.status
                     ]
                   }
@@ -390,10 +715,19 @@ export function QuestionSolvePage() {
               </p>
 
               <p>
-                {COPY.results.labels.score}:{' '}
+                {
+                  COPY.results.labels
+                    .score
+                }
+                :{' '}
                 <strong>
-                  {submissionResult.score} /{' '}
-                  {submissionResult.maxScore}
+                  {
+                    submissionResult.score
+                  }{' '}
+                  /{' '}
+                  {
+                    submissionResult.maxScore
+                  }
                 </strong>
               </p>
 

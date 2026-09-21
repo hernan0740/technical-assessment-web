@@ -11,5 +11,10 @@ export interface CreateAssessmentRequest {
   name: string
   description: string
   timeLimitMinutes: number
-  questionCount: number
+}
+
+export interface UpdateAssessmentRequest {
+  name?: string
+  description?: string
+  timeLimitMinutes?: number
 }

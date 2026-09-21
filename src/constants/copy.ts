@@ -1,7 +1,11 @@
 export const COPY = {
   common: {
-    companyName: 'Banco de Bogotá',
-    appName: 'Plataforma de Evaluaciones Técnicas',
+    companyName:
+      'Banco de Bogotá',
+
+    appName:
+      'Plataforma de Evaluaciones Técnicas',
+
     loading: 'Cargando...',
     create: 'Crear',
     remove: 'Eliminar',
@@ -13,22 +17,43 @@ export const COPY = {
     },
 
     languageSelector: {
-        placeholder: 'Selecciona un lenguaje',
+      placeholder:
+        'Selecciona un lenguaje',
     },
   },
 
   assessments: {
-    title: 'Evaluaciones técnicas',
+    title:
+      'Evaluaciones técnicas',
+
     description:
       'Selecciona una evaluación para comenzar.',
 
-    createButton: 'Crear evaluación',
-    viewButton: 'Ver evaluación',
+    createButton:
+      'Crear evaluación',
 
-    loading: 'Cargando evaluaciones...',
+    viewButton:
+      'Ver evaluación',
+
+    editButton:
+      'Editar',
+
+    deleteButton:
+      'Eliminar',
+
+    deletingButton:
+      'Eliminando...',
+
+    confirmDelete:
+      '¿Estás seguro de eliminar esta evaluación? También se eliminarán sus preguntas y resultados asociados.',
+
+    loading:
+      'Cargando evaluaciones...',
 
     empty: {
-      title: 'No hay evaluaciones disponibles',
+      title:
+        'No hay evaluaciones disponibles',
+
       description:
         'Aún no se han creado evaluaciones técnicas.',
     },
@@ -41,120 +66,253 @@ export const COPY = {
     },
 
     errors: {
-      load: 'No fue posible cargar las evaluaciones.',
-      create: 'No fue posible crear la evaluación.',
+      load:
+        'No fue posible cargar las evaluaciones.',
+
+      create:
+        'No fue posible crear la evaluación.',
+
+      delete:
+        'No fue posible eliminar la evaluación.',
     },
   },
 
   assessmentDetail: {
-    eyebrow: 'Evaluación técnica',
-    title: 'Preguntas de la evaluación',
+    eyebrow:
+      'Evaluación técnica',
+
+    title:
+      'Preguntas de la evaluación',
+
     description:
       'Revisa las preguntas de programación disponibles.',
 
-    back: 'Volver a evaluaciones',
-    createQuestion: 'Crear pregunta',
-    createFirstQuestion: 'Crear primera pregunta',
-    solveQuestion: 'Resolver pregunta',
+    back:
+      'Volver a evaluaciones',
 
-    loading: 'Cargando preguntas...',
+    createQuestion:
+      'Crear pregunta',
+
+    createFirstQuestion:
+      'Crear primera pregunta',
+
+    solveQuestion:
+      'Resolver pregunta',
+
+    editQuestion:
+      'Editar',
+
+    deleteQuestion:
+      'Eliminar',
+
+    deletingQuestion:
+      'Eliminando...',
+
+    confirmDeleteQuestion:
+      '¿Estás seguro de eliminar esta pregunta? También se eliminarán los resultados asociados.',
+
+    loading:
+      'Cargando preguntas...',
 
     empty: {
-      title: 'No hay preguntas disponibles',
+      title:
+        'No hay preguntas disponibles',
+
       description:
         'Esta evaluación aún no tiene preguntas de programación.',
     },
 
     labels: {
-      question: 'Pregunta',
-      score: 'Puntaje',
-      languages: 'Lenguajes',
+      question:
+        'Pregunta',
+
+      score:
+        'Puntaje',
+
+      languages:
+        'Lenguajes',
     },
 
     errors: {
       assessmentIdRequired:
         'El identificador de la evaluación es obligatorio.',
-      load: 'No fue posible cargar las preguntas.',
+
+      load:
+        'No fue posible cargar las preguntas.',
+
+      delete:
+        'No fue posible eliminar la pregunta.',
     },
   },
 
   createAssessment: {
-    eyebrow: 'Evaluación técnica',
-    title: 'Crear evaluación',
+    eyebrow:
+      'Evaluación técnica',
+
+    title:
+      'Crear evaluación',
+
     description:
       'Define la información básica de la evaluación técnica.',
 
-    back: 'Volver a evaluaciones',
+    back:
+      'Volver a evaluaciones',
 
     fields: {
-      name: 'Nombre',
+      name:
+        'Nombre',
+
       namePlaceholder:
         'Ej. Fundamentos de programación',
 
-      description: 'Descripción',
+      description:
+        'Descripción',
+
       descriptionPlaceholder:
         'Describe el objetivo de la evaluación...',
 
-      timeLimit: 'Tiempo límite',
-      questionCount: 'Cantidad de preguntas',
+      timeLimit:
+        'Tiempo límite',
     },
 
-    submit: 'Crear evaluación',
-    submitting: 'Creando...',
+    submit:
+      'Crear evaluación',
+
+    submitting:
+      'Creando...',
 
     errors: {
-      create: 'No fue posible crear la evaluación.',
+      create:
+        'No fue posible crear la evaluación.',
+    },
+  },
+
+  editAssessment: {
+    eyebrow:
+      'Evaluación técnica',
+
+    title:
+      'Editar evaluación',
+
+    description:
+      'Actualiza la información de la evaluación técnica.',
+
+    back:
+      'Volver a la evaluación',
+
+    fields: {
+      name:
+        'Nombre',
+
+      namePlaceholder:
+        'Ej. Fundamentos de programación',
+
+      description:
+        'Descripción',
+
+      descriptionPlaceholder:
+        'Describe el objetivo de la evaluación...',
+
+      timeLimit:
+        'Tiempo límite',
+    },
+
+    submit:
+      'Guardar cambios',
+
+    submitting:
+      'Guardando...',
+
+    loading:
+      'Cargando evaluación...',
+
+    errors: {
+      assessmentIdRequired:
+        'El identificador de la evaluación es obligatorio.',
+
+      load:
+        'No fue posible cargar la evaluación.',
+
+      update:
+        'No fue posible actualizar la evaluación.',
     },
   },
 
   createQuestion: {
-    eyebrow: 'Evaluación técnica',
-    title: 'Crear pregunta',
+    eyebrow:
+      'Evaluación técnica',
+
+    title:
+      'Crear pregunta',
+
     description:
       'Configura el ejercicio de programación y sus casos de prueba.',
 
-    back: 'Volver a la evaluación',
+    back:
+      'Volver a la evaluación',
 
     fields: {
-      title: 'Título',
+      title:
+        'Título',
+
       titlePlaceholder:
         'Ej. Duplicar un número',
 
-      description: 'Descripción',
+      description:
+        'Descripción',
+
       descriptionPlaceholder:
         'Describe lo que debe resolver el candidato...',
 
-      score: 'Puntaje',
+      score:
+        'Puntaje',
     },
 
     languages: {
-      title: 'Lenguajes permitidos',
+      title:
+        'Lenguajes permitidos',
+
       description:
         'Selecciona los lenguajes que podrá utilizar el candidato.',
     },
 
     testCases: {
-      title: 'Casos de prueba',
+      title:
+        'Casos de prueba',
 
       description:
         'Los casos privados se utilizan para validar la solución sin revelar sus datos al candidato.',
 
-      add: 'Agregar caso de prueba',
-      remove: 'Eliminar',
+      add:
+        'Agregar caso de prueba',
 
-      testCase: 'Caso de prueba',
+      remove:
+        'Eliminar',
 
-      input: 'Entrada',
-      inputPlaceholder: 'Ej. 5',
+      testCase:
+        'Caso de prueba',
 
-      expectedOutput: 'Salida esperada',
-      expectedOutputPlaceholder: 'Ej. 10',
+      input:
+        'Entrada',
 
-      private: 'Caso de prueba privado',
+      inputPlaceholder:
+        'Ej. 5',
+
+      expectedOutput:
+        'Salida esperada',
+
+      expectedOutputPlaceholder:
+        'Ej. 10',
+
+      private:
+        'Caso de prueba privado',
     },
 
-    submit: 'Crear pregunta',
-    submitting: 'Creando...',
+    submit:
+      'Crear pregunta',
+
+    submitting:
+      'Creando...',
 
     errors: {
       assessmentIdRequired:
@@ -168,36 +326,154 @@ export const COPY = {
     },
   },
 
+  editQuestion: {
+    eyebrow:
+      'Evaluación técnica',
+
+    title:
+      'Editar pregunta',
+
+    description:
+      'Actualiza la información de la pregunta de programación.',
+
+    back:
+      'Volver a la evaluación',
+
+    fields: {
+      title:
+        'Título',
+
+      titlePlaceholder:
+        'Ej. Duplicar un número',
+
+      description:
+        'Descripción',
+
+      descriptionPlaceholder:
+        'Describe lo que debe resolver el candidato...',
+
+      score:
+        'Puntaje',
+    },
+
+    languages: {
+      title:
+        'Lenguajes permitidos',
+
+      description:
+        'Selecciona los lenguajes que podrá utilizar el candidato.',
+    },
+
+    testCasesNotice: {
+      title:
+        'Casos de prueba',
+
+      description:
+        'Los casos de prueba no pueden modificarse después de crear la pregunta. Si necesitas cambiarlos, elimina la pregunta y crea una nueva.',
+    },
+
+    submit:
+      'Guardar cambios',
+
+    submitting:
+      'Guardando...',
+
+    loading:
+      'Cargando pregunta...',
+
+    errors: {
+      missingIds:
+        'No se encontró la evaluación o la pregunta.',
+
+      load:
+        'No fue posible cargar la pregunta.',
+
+      languageRequired:
+        'Selecciona al menos un lenguaje de programación.',
+
+      update:
+        'No fue posible actualizar la pregunta.',
+    },
+  },
+
   solveQuestion: {
-    eyebrow: 'Pregunta de programación',
+    eyebrow:
+      'Pregunta de programación',
 
     labels: {
-      maximumScore: 'Puntaje máximo',
-      points: 'puntos',
-      timeElapsed: 'Tiempo transcurrido',
-      code: 'Código',
-      candidate: 'Candidato',
-      executionTime: 'Tiempo',
-      memory: 'Memoria',
-      status: 'Estado',
+      maximumScore:
+        'Puntaje máximo',
+
+      points:
+        'puntos',
+
+      timeElapsed:
+        'Tiempo transcurrido',
+
+      code:
+        'Código',
+
+      candidate:
+        'Candidato',
+
+      executionTime:
+        'Tiempo',
+
+      memory:
+        'Memoria',
+
+      status:
+        'Estado',
     },
 
     candidatePlaceholder:
       'Ingresa el nombre del candidato',
 
-    runCode: 'Ejecutar código',
-    running: 'Ejecutando...',
+    publicTests: {
+      title:
+        'Casos de prueba públicos',
 
-    submitAnswer: 'Enviar respuesta',
-    submitting: 'Enviando...',
+      description:
+        'Puedes utilizar estos casos para probar tu solución antes de enviarla.',
+
+      select:
+        'Caso de prueba',
+
+      option:
+        'Caso público',
+
+      input:
+        'Entrada',
+
+      expectedOutput:
+        'Salida esperada',
+
+      empty:
+        'Esta pregunta no tiene casos de prueba públicos disponibles.',
+    },
+
+    runCode:
+      'Ejecutar código',
+
+    running:
+      'Ejecutando...',
+
+    submitAnswer:
+      'Enviar respuesta',
+
+    submitting:
+      'Enviando...',
 
     console: {
-      title: 'Consola',
+      title:
+        'Consola',
+
       empty:
         'Ejecuta tu código para visualizar el resultado.',
     },
 
-    loading: 'Cargando pregunta...',
+    loading:
+      'Cargando pregunta...',
 
     errors: {
       questionIdRequired:
@@ -221,33 +497,62 @@ export const COPY = {
   },
 
   results: {
-    eyebrow: 'Resultado de la evaluación',
-    title: 'Resultado de la respuesta',
+    eyebrow:
+      'Resultado de la evaluación',
+
+    title:
+      'Resultado de la respuesta',
 
     description:
       'Revisa el resultado obtenido en la evaluación técnica.',
 
-    loading: 'Cargando resultados...',
-    notFound: 'No se encontró la respuesta.',
+    loading:
+      'Cargando resultados...',
 
-    back: 'Volver a evaluaciones',
+    notFound:
+      'No se encontró la respuesta.',
+
+    back:
+      'Volver a evaluaciones',
 
     labels: {
-      status: 'Estado',
-      score: 'Puntaje',
-      candidate: 'Candidato',
-      language: 'Lenguaje',
-      testsPassed: 'Pruebas aprobadas',
-      timeSpent: 'Tiempo empleado',
+      status:
+        'Estado',
+
+      score:
+        'Puntaje',
+
+      candidate:
+        'Candidato',
+
+      language:
+        'Lenguaje',
+
+      testsPassed:
+        'Pruebas aprobadas',
+
+      timeSpent:
+        'Tiempo empleado',
     },
 
     testResults: {
-      title: 'Resultados de las pruebas',
-      testCase: 'Caso de prueba',
-      public: 'Caso de prueba público',
-      private: 'Caso de prueba privado',
-      passed: 'Aprobado',
-      failed: 'Fallido',
+      title:
+        'Resultados de las pruebas',
+
+      testCase:
+        'Caso de prueba',
+
+      public:
+        'Caso de prueba público',
+
+      private:
+        'Caso de prueba privado',
+
+      passed:
+        'Aprobado',
+
+      failed:
+        'Fallido',
     },
 
     errors: {
@@ -260,22 +565,41 @@ export const COPY = {
   },
 
   submissionStatus: {
-    PASSED: 'APROBADO',
-    PARTIAL: 'PARCIAL',
-    FAILED: 'FALLIDO',
+    PASSED:
+      'APROBADO',
+
+    PARTIAL:
+      'PARCIAL',
+
+    FAILED:
+      'FALLIDO',
   },
 
   executionStatus: {
-    SUCCESS: 'EJECUCIÓN EXITOSA',
-    COMPILATION_ERROR: 'ERROR DE COMPILACIÓN',
-    RUNTIME_ERROR: 'ERROR DE EJECUCIÓN',
-    TIMEOUT: 'TIEMPO DE EJECUCIÓN AGOTADO',
-    ERROR: 'ERROR',
+    SUCCESS:
+      'EJECUCIÓN EXITOSA',
+
+    COMPILATION_ERROR:
+      'ERROR DE COMPILACIÓN',
+
+    RUNTIME_ERROR:
+      'ERROR DE EJECUCIÓN',
+
+    TIMEOUT:
+      'TIEMPO DE EJECUCIÓN AGOTADO',
+
+    ERROR:
+      'ERROR',
   },
 
   languages: {
-    java: 'Java',
-    javascript: 'JavaScript',
-    python: 'Python',
+    java:
+      'Java',
+
+    javascript:
+      'JavaScript',
+
+    python:
+      'Python',
   },
 } as const

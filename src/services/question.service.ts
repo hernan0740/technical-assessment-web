@@ -1,4 +1,8 @@
-import type { CreateQuestionRequest, Question } from '@/types/question'
+import type {
+  CreateQuestionRequest,
+  Question,
+  UpdateQuestionRequest,
+} from '@/types/question'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -50,14 +54,54 @@ export async function createQuestion(
   )
 
   if (!response.ok) {
-    const errorBody = (await response.json().catch(() => null)) as {
+    const errorBody = (await response
+      .json()
+      .catch(() => null)) as {
       message?: string
     } | null
 
     throw new Error(
-      errorBody?.message ?? 'Unable to create question',
+      errorBody?.message ??
+        'Unable to create question',
     )
   }
 
   return response.json() as Promise<Question>
+}
+
+export async function updateQuestion(
+  questionId: string,
+  input: UpdateQuestionRequest,
+): Promise<Question> {
+  const response = await fetch(
+    `${API_URL}/questions/${questionId}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(input),
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error('Unable to update question')
+  }
+
+  return response.json() as Promise<Question>
+}
+
+export async function deleteQuestion(
+  questionId: string,
+): Promise<void> {
+  const response = await fetch(
+    `${API_URL}/questions/${questionId}`,
+    {
+      method: 'DELETE',
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error('Unable to delete question')
+  }
 }

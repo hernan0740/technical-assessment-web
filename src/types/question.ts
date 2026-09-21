@@ -29,3 +29,10 @@ export interface CreateQuestionRequest {
   testCases: CreateTestCaseRequest[]
   score: number
 }
+
+export interface UpdateQuestionRequest {
+  title?: string
+  description?: string
+  allowedLanguages?: ProgrammingLanguage[]
+  score?: number
+}

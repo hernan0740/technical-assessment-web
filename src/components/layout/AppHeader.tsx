@@ -14,9 +14,7 @@ export function AppHeader() {
 
           <div className="hidden h-8 w-px bg-white/30 sm:block" />
 
-          <p className="text-m font-medium text-blue-100">
-            {COPY.common.appName}
-          </p>
+          <p className="text-m font-medium text-blue-100">{COPY.common.appName}</p>
         </div>
       </div>
     </header>

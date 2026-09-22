@@ -1,13 +1,8 @@
-import type {
-  ExecutionResult,
-  RunCodeRequest,
-} from '@/types/execution'
+import type { ExecutionResult, RunCodeRequest } from '@/types/execution'
 
 const API_URL = import.meta.env.VITE_API_URL
 
-export async function runCode(
-  input: RunCodeRequest,
-): Promise<ExecutionResult> {
+export async function runCode(input: RunCodeRequest): Promise<ExecutionResult> {
   const response = await fetch(`${API_URL}/executions/run`, {
     method: 'POST',
     headers: {
@@ -21,9 +16,7 @@ export async function runCode(
       message?: string
     } | null
 
-    throw new Error(
-      errorBody?.message ?? 'Unable to execute code',
-    )
+    throw new Error(errorBody?.message ?? 'Unable to execute code')
   }
 
   return response.json() as Promise<ExecutionResult>

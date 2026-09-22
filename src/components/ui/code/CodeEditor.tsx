@@ -7,11 +7,7 @@ interface CodeEditorProps {
   onChange: (value: string) => void
 }
 
-export function CodeEditor({
-  language,
-  value,
-  onChange,
-}: CodeEditorProps) {
+export function CodeEditor({ language, value, onChange }: CodeEditorProps) {
   return (
     <Editor
       height="500px"

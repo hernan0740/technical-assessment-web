@@ -27,26 +27,23 @@ export function CreateQuestionPage() {
   const [description, setDescription] = useState('')
   const [score, setScore] = useState(20)
 
-  const [allowedLanguages, setAllowedLanguages] = useState<
-    ProgrammingLanguage[]
-  >(['java', 'javascript', 'python'])
+  const [allowedLanguages, setAllowedLanguages] = useState<ProgrammingLanguage[]>([
+    'java',
+    'javascript',
+    'python',
+  ])
 
-  const [testCases, setTestCases] = useState<
-    CreateTestCaseRequest[]
-  >([{ ...EMPTY_TEST_CASE }])
+  const [testCases, setTestCases] = useState<CreateTestCaseRequest[]>([
+    { ...EMPTY_TEST_CASE },
+  ])
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const toggleLanguage = (
-    language: ProgrammingLanguage,
-  ) => {
+  const toggleLanguage = (language: ProgrammingLanguage) => {
     setAllowedLanguages((current) => {
       if (current.includes(language)) {
-        return current.filter(
-          (currentLanguage) =>
-            currentLanguage !== language,
-        )
+        return current.filter((currentLanguage) => currentLanguage !== language)
       }
 
       return [...current, language]
@@ -71,37 +68,23 @@ export function CreateQuestionPage() {
   }
 
   const addTestCase = () => {
-    setTestCases((current) => [
-      ...current,
-      { ...EMPTY_TEST_CASE },
-    ])
+    setTestCases((current) => [...current, { ...EMPTY_TEST_CASE }])
   }
 
   const removeTestCase = (index: number) => {
-    setTestCases((current) =>
-      current.filter(
-        (_, currentIndex) => currentIndex !== index,
-      ),
-    )
+    setTestCases((current) => current.filter((_, currentIndex) => currentIndex !== index))
   }
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>,
-  ) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     if (!assessmentId) {
-      setError(
-        COPY.createQuestion.errors
-          .assessmentIdRequired,
-      )
+      setError(COPY.createQuestion.errors.assessmentIdRequired)
       return
     }
 
     if (allowedLanguages.length === 0) {
-      setError(
-        COPY.createQuestion.errors.languageRequired,
-      )
+      setError(COPY.createQuestion.errors.languageRequired)
       return
     }
 
@@ -136,65 +119,42 @@ export function CreateQuestionPage() {
         </Link>
 
         <header className="mt-6">
-          <p className="text-sm text-slate-500">
-            {COPY.createQuestion.eyebrow}
-          </p>
+          <p className="text-sm text-slate-500">{COPY.createQuestion.eyebrow}</p>
 
           <h1 className="mt-1 text-3xl font-bold tracking-tight">
             {COPY.createQuestion.title}
           </h1>
 
-          <p className="mt-2 text-slate-600">
-            {COPY.createQuestion.description}
-          </p>
+          <p className="mt-2 text-slate-600">{COPY.createQuestion.description}</p>
         </header>
 
-        <form
-          onSubmit={handleSubmit}
-          className="mt-8 space-y-8"
-        >
+        <form onSubmit={handleSubmit} className="mt-8 space-y-8">
           <section className="space-y-6 rounded-xl border bg-white p-6 shadow-sm">
             <div>
-              <label
-                htmlFor="title"
-                className="mb-2 block text-sm font-medium"
-              >
+              <label htmlFor="title" className="mb-2 block text-sm font-medium">
                 {COPY.createQuestion.fields.title}
               </label>
 
               <input
                 id="title"
                 value={title}
-                onChange={(event) =>
-                  setTitle(event.target.value)
-                }
-                placeholder={
-                  COPY.createQuestion.fields
-                    .titlePlaceholder
-                }
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder={COPY.createQuestion.fields.titlePlaceholder}
                 required
                 className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="description"
-                className="mb-2 block text-sm font-medium"
-              >
+              <label htmlFor="description" className="mb-2 block text-sm font-medium">
                 {COPY.createQuestion.fields.description}
               </label>
 
               <textarea
                 id="description"
                 value={description}
-                onChange={(event) =>
-                  setDescription(event.target.value)
-                }
-                placeholder={
-                  COPY.createQuestion.fields
-                    .descriptionPlaceholder
-                }
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder={COPY.createQuestion.fields.descriptionPlaceholder}
                 required
                 rows={5}
                 className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2"
@@ -202,10 +162,7 @@ export function CreateQuestionPage() {
             </div>
 
             <div>
-              <label
-                htmlFor="score"
-                className="mb-2 block text-sm font-medium"
-              >
+              <label htmlFor="score" className="mb-2 block text-sm font-medium">
                 {COPY.createQuestion.fields.score}
               </label>
 
@@ -214,9 +171,7 @@ export function CreateQuestionPage() {
                 type="number"
                 min="1"
                 value={score}
-                onChange={(event) =>
-                  setScore(Number(event.target.value))
-                }
+                onChange={(event) => setScore(Number(event.target.value))}
                 required
                 className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 sm:w-40"
               />
@@ -240,12 +195,8 @@ export function CreateQuestionPage() {
                 >
                   <input
                     type="checkbox"
-                    checked={allowedLanguages.includes(
-                      language.value,
-                    )}
-                    onChange={() =>
-                      toggleLanguage(language.value)
-                    }
+                    checked={allowedLanguages.includes(language.value)}
+                    onChange={() => toggleLanguage(language.value)}
                   />
 
                   {COPY.languages[language.value]}
@@ -262,10 +213,7 @@ export function CreateQuestionPage() {
                 </h2>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  {
-                    COPY.createQuestion.testCases
-                      .description
-                  }
+                  {COPY.createQuestion.testCases.description}
                 </p>
               </div>
 
@@ -281,17 +229,10 @@ export function CreateQuestionPage() {
 
             <div className="mt-6 space-y-6">
               {testCases.map((testCase, index) => (
-                <div
-                  key={index}
-                  className="rounded-lg border p-5"
-                >
+                <div key={index} className="rounded-lg border p-5">
                   <div className="flex items-center justify-between">
                     <h3 className="font-medium">
-                      {
-                        COPY.createQuestion.testCases
-                          .testCase
-                      }{' '}
-                      {index + 1}
+                      {COPY.createQuestion.testCases.testCase} {index + 1}
                     </h3>
 
                     {testCases.length > 1 && (
@@ -299,14 +240,9 @@ export function CreateQuestionPage() {
                         className="bg-[#0043A9] text-white hover:bg-[#00388F]"
                         type="button"
                         variant="outline"
-                        onClick={() =>
-                          removeTestCase(index)
-                        }
+                        onClick={() => removeTestCase(index)}
                       >
-                        {
-                          COPY.createQuestion.testCases
-                            .remove
-                        }
+                        {COPY.createQuestion.testCases.remove}
                       </Button>
                     )}
                   </div>
@@ -317,26 +253,16 @@ export function CreateQuestionPage() {
                         htmlFor={`input-${index}`}
                         className="mb-2 block text-sm font-medium"
                       >
-                        {
-                          COPY.createQuestion.testCases
-                            .input
-                        }
+                        {COPY.createQuestion.testCases.input}
                       </label>
 
                       <textarea
                         id={`input-${index}`}
                         value={testCase.input}
                         onChange={(event) =>
-                          updateTestCase(
-                            index,
-                            'input',
-                            event.target.value,
-                          )
+                          updateTestCase(index, 'input', event.target.value)
                         }
-                        placeholder={
-                          COPY.createQuestion.testCases
-                            .inputPlaceholder
-                        }
+                        placeholder={COPY.createQuestion.testCases.inputPlaceholder}
                         required
                         rows={3}
                         className="w-full rounded-md border px-3 py-2 font-mono text-sm outline-none focus:ring-2"
@@ -348,25 +274,17 @@ export function CreateQuestionPage() {
                         htmlFor={`output-${index}`}
                         className="mb-2 block text-sm font-medium"
                       >
-                        {
-                          COPY.createQuestion.testCases
-                            .expectedOutput
-                        }
+                        {COPY.createQuestion.testCases.expectedOutput}
                       </label>
 
                       <textarea
                         id={`output-${index}`}
                         value={testCase.expectedOutput}
                         onChange={(event) =>
-                          updateTestCase(
-                            index,
-                            'expectedOutput',
-                            event.target.value,
-                          )
+                          updateTestCase(index, 'expectedOutput', event.target.value)
                         }
                         placeholder={
-                          COPY.createQuestion.testCases
-                            .expectedOutputPlaceholder
+                          COPY.createQuestion.testCases.expectedOutputPlaceholder
                         }
                         required
                         rows={3}
@@ -380,29 +298,18 @@ export function CreateQuestionPage() {
                       type="checkbox"
                       checked={testCase.isPrivate}
                       onChange={(event) =>
-                        updateTestCase(
-                          index,
-                          'isPrivate',
-                          event.target.checked,
-                        )
+                        updateTestCase(index, 'isPrivate', event.target.checked)
                       }
                     />
 
-                    {
-                      COPY.createQuestion.testCases
-                        .private
-                    }
+                    {COPY.createQuestion.testCases.private}
                   </label>
                 </div>
               ))}
             </div>
           </section>
 
-          {error && (
-            <p className="text-sm text-red-600">
-              {error}
-            </p>
-          )}
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           <div className="flex justify-end">
             <Button
@@ -416,9 +323,7 @@ export function CreateQuestionPage() {
                 testCases.length === 0
               }
             >
-              {isSubmitting
-                ? COPY.createQuestion.submitting
-                : COPY.createQuestion.submit}
+              {isSubmitting ? COPY.createQuestion.submitting : COPY.createQuestion.submit}
             </Button>
           </div>
         </form>

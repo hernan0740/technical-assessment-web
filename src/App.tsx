@@ -1,8 +1,4 @@
-import {
-  Navigate,
-  Route,
-  Routes,
-} from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { AppLayout } from '@/components/layout/AppLayout'
 
@@ -21,83 +17,38 @@ import { ResultsPage } from '@/pages/results/ResultsPage'
 function App() {
   return (
     <Routes>
-      <Route
-        element={
-          <AppLayout />
-        }
-      >
-        <Route
-          path="/"
-          element={
-            <Navigate
-              to="/assessments"
-              replace
-            />
-          }
-        />
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<Navigate to="/assessments" replace />} />
 
-        <Route
-          path="/assessments"
-          element={
-            <AssessmentsPage />
-          }
-        />
+        <Route path="/assessments" element={<AssessmentsPage />} />
 
-        <Route
-          path="/assessments/new"
-          element={
-            <CreateAssessmentPage />
-          }
-        />
+        <Route path="/assessments/new" element={<CreateAssessmentPage />} />
 
-        <Route
-          path="/assessments/:assessmentId/edit"
-          element={
-            <EditAssessmentPage />
-          }
-        />
+        <Route path="/assessments/:assessmentId/edit" element={<EditAssessmentPage />} />
 
         <Route
           path="/assessments/:assessmentId/results"
-          element={
-            <AssessmentResultsPage />
-          }
+          element={<AssessmentResultsPage />}
         />
 
-        <Route
-          path="/assessments/:assessmentId"
-          element={
-            <AssessmentDetailPage />
-          }
-        />
+        <Route path="/assessments/:assessmentId" element={<AssessmentDetailPage />} />
 
         <Route
           path="/assessments/:assessmentId/questions/new"
-          element={
-            <CreateQuestionPage />
-          }
+          element={<CreateQuestionPage />}
         />
 
         <Route
           path="/assessments/:assessmentId/questions/:questionId/edit"
-          element={
-            <EditQuestionPage />
-          }
+          element={<EditQuestionPage />}
         />
 
         <Route
           path="/assessments/:assessmentId/questions/:questionId"
-          element={
-            <QuestionSolvePage />
-          }
+          element={<QuestionSolvePage />}
         />
 
-        <Route
-          path="/results/:submissionId"
-          element={
-            <ResultsPage />
-          }
-        />
+        <Route path="/results/:submissionId" element={<ResultsPage />} />
       </Route>
     </Routes>
   )

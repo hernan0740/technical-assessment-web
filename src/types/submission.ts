@@ -1,10 +1,7 @@
 import type { ProgrammingLanguage } from '@/types/programming-language'
 import type { ExecutionStatus } from '@/types/execution'
 
-export type SubmissionStatus =
-  | 'PASSED'
-  | 'PARTIAL'
-  | 'FAILED'
+export type SubmissionStatus = 'PASSED' | 'PARTIAL' | 'FAILED'
 
 export interface SubmitAnswerRequest {
   assessmentId: string

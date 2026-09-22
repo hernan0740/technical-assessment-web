@@ -1,7 +1,4 @@
-export type ProgrammingLanguage =
-  | 'java'
-  | 'javascript'
-  | 'python'
+export type ProgrammingLanguage = 'java' | 'javascript' | 'python'
 
 export interface ProgrammingLanguageOption {
   value: ProgrammingLanguage

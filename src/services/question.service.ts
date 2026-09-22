@@ -6,12 +6,8 @@ import type {
 
 const API_URL = import.meta.env.VITE_API_URL
 
-export async function getQuestion(
-  questionId: string,
-): Promise<Question> {
-  const response = await fetch(
-    `${API_URL}/questions/${questionId}`,
-  )
+export async function getQuestion(questionId: string): Promise<Question> {
+  const response = await fetch(`${API_URL}/questions/${questionId}`)
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -27,9 +23,7 @@ export async function getQuestion(
 export async function getQuestionsByAssessment(
   assessmentId: string,
 ): Promise<Question[]> {
-  const response = await fetch(
-    `${API_URL}/assessments/${assessmentId}/questions`,
-  )
+  const response = await fetch(`${API_URL}/assessments/${assessmentId}/questions`)
 
   if (!response.ok) {
     throw new Error('Unable to load questions')
@@ -42,28 +36,20 @@ export async function createQuestion(
   assessmentId: string,
   input: CreateQuestionRequest,
 ): Promise<Question> {
-  const response = await fetch(
-    `${API_URL}/assessments/${assessmentId}/questions`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(input),
+  const response = await fetch(`${API_URL}/assessments/${assessmentId}/questions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  )
+    body: JSON.stringify(input),
+  })
 
   if (!response.ok) {
-    const errorBody = (await response
-      .json()
-      .catch(() => null)) as {
+    const errorBody = (await response.json().catch(() => null)) as {
       message?: string
     } | null
 
-    throw new Error(
-      errorBody?.message ??
-        'Unable to create question',
-    )
+    throw new Error(errorBody?.message ?? 'Unable to create question')
   }
 
   return response.json() as Promise<Question>
@@ -73,16 +59,13 @@ export async function updateQuestion(
   questionId: string,
   input: UpdateQuestionRequest,
 ): Promise<Question> {
-  const response = await fetch(
-    `${API_URL}/questions/${questionId}`,
-    {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(input),
+  const response = await fetch(`${API_URL}/questions/${questionId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  )
+    body: JSON.stringify(input),
+  })
 
   if (!response.ok) {
     throw new Error('Unable to update question')
@@ -91,15 +74,10 @@ export async function updateQuestion(
   return response.json() as Promise<Question>
 }
 
-export async function deleteQuestion(
-  questionId: string,
-): Promise<void> {
-  const response = await fetch(
-    `${API_URL}/questions/${questionId}`,
-    {
-      method: 'DELETE',
-    },
-  )
+export async function deleteQuestion(questionId: string): Promise<void> {
+  const response = await fetch(`${API_URL}/questions/${questionId}`, {
+    method: 'DELETE',
+  })
 
   if (!response.ok) {
     throw new Error('Unable to delete question')

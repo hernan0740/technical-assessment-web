@@ -1,8 +1,6 @@
 import type { SubmissionResult } from '@/types/submission'
 
-export type AssessmentCompletionReason =
-  | 'COMPLETED'
-  | 'TIME_EXPIRED'
+export type AssessmentCompletionReason = 'COMPLETED' | 'TIME_EXPIRED'
 
 export interface AssessmentSessionQuestion {
   id: string

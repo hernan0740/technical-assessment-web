@@ -1,10 +1,8 @@
 export const COPY = {
   common: {
-    companyName:
-      'Banco de Bogotá',
+    companyName: 'Banco de Bogotá',
 
-    appName:
-      'Plataforma de Evaluaciones Técnicas',
+    appName: 'Plataforma de Evaluaciones Técnicas',
 
     loading: 'Cargando...',
     create: 'Crear',
@@ -12,692 +10,499 @@ export const COPY = {
     back: 'Volver',
 
     error: {
-      unexpected:
-        'Ocurrió un error inesperado. Intenta nuevamente.',
+      unexpected: 'Ocurrió un error inesperado. Intenta nuevamente.',
     },
 
     languageSelector: {
-      placeholder:
-        'Selecciona un lenguaje',
+      placeholder: 'Selecciona un lenguaje',
     },
   },
 
   assessments: {
-    title:
-      'Evaluaciones técnicas',
+    title: 'Evaluaciones técnicas',
 
-    description:
-      'Selecciona una evaluación para comenzar.',
+    description: 'Selecciona una evaluación para comenzar.',
 
-    createButton:
-      'Crear evaluación',
+    createButton: 'Crear evaluación',
 
-    viewButton:
-      'Ver evaluación',
+    viewButton: 'Ver evaluación',
 
-    editButton:
-      'Editar',
+    editButton: 'Editar',
 
-    deleteButton:
-      'Eliminar',
+    deleteButton: 'Eliminar',
 
-    deletingButton:
-      'Eliminando...',
+    deletingButton: 'Eliminando...',
 
     confirmDelete:
       '¿Estás seguro de eliminar esta evaluación? También se eliminarán sus preguntas y resultados asociados.',
 
-    loading:
-      'Cargando evaluaciones...',
+    loading: 'Cargando evaluaciones...',
 
     empty: {
-      title:
-        'No hay evaluaciones disponibles',
+      title: 'No hay evaluaciones disponibles',
 
-      description:
-        'Aún no se han creado evaluaciones técnicas.',
+      description: 'Aún no se han creado evaluaciones técnicas.',
     },
 
     units: {
-      minute:
-        'minuto',
+      minute: 'minuto',
 
-      minutes:
-        'minutos',
+      minutes: 'minutos',
 
-      question:
-        'pregunta',
+      question: 'pregunta',
 
-      questions:
-        'preguntas',
+      questions: 'preguntas',
     },
 
     errors: {
-      load:
-        'No fue posible cargar las evaluaciones.',
+      load: 'No fue posible cargar las evaluaciones.',
 
-      create:
-        'No fue posible crear la evaluación.',
+      create: 'No fue posible crear la evaluación.',
 
-      delete:
-        'No fue posible eliminar la evaluación.',
+      delete: 'No fue posible eliminar la evaluación.',
     },
   },
 
   assessmentDetail: {
-    eyebrow:
-      'Evaluación técnica',
+    eyebrow: 'Evaluación técnica',
 
-    title:
-      'Preguntas de la evaluación',
+    title: 'Preguntas de la evaluación',
 
-    description:
-      'Revisa las preguntas de programación disponibles.',
+    description: 'Revisa las preguntas de programación disponibles.',
 
-    back:
-      'Volver a evaluaciones',
+    back: 'Volver a evaluaciones',
 
-    createQuestion:
-      'Crear pregunta',
+    createQuestion: 'Crear pregunta',
 
-    createFirstQuestion:
-      'Crear primera pregunta',
+    createFirstQuestion: 'Crear primera pregunta',
 
-    solveQuestion:
-      'Resolver pregunta',
+    solveQuestion: 'Resolver pregunta',
 
-    editQuestion:
-      'Editar',
+    editQuestion: 'Editar',
 
-    deleteQuestion:
-      'Eliminar',
+    deleteQuestion: 'Eliminar',
 
-    deletingQuestion:
-      'Eliminando...',
+    deletingQuestion: 'Eliminando...',
 
     confirmDeleteQuestion:
       '¿Estás seguro de eliminar esta pregunta? También se eliminarán los resultados asociados.',
 
-    loading:
-      'Cargando evaluación...',
+    loading: 'Cargando evaluación...',
 
     empty: {
-      title:
-        'No hay preguntas disponibles',
+      title: 'No hay preguntas disponibles',
 
-      description:
-        'Esta evaluación aún no tiene preguntas de programación.',
+      description: 'Esta evaluación aún no tiene preguntas de programación.',
     },
 
     labels: {
-      question:
-        'Pregunta',
+      question: 'Pregunta',
 
-      score:
-        'Puntaje',
+      score: 'Puntaje',
 
-      languages:
-        'Lenguajes',
+      languages: 'Lenguajes',
     },
 
     errors: {
-      assessmentIdRequired:
-        'El identificador de la evaluación es obligatorio.',
+      assessmentIdRequired: 'El identificador de la evaluación es obligatorio.',
 
-      load:
-        'No fue posible cargar la evaluación.',
+      load: 'No fue posible cargar la evaluación.',
 
-      delete:
-        'No fue posible eliminar la pregunta.',
+      delete: 'No fue posible eliminar la pregunta.',
     },
   },
 
   assessmentSession: {
-    title:
-      'Iniciar evaluación',
+    title: 'Iniciar evaluación',
 
     description:
       'Ingresa el nombre del candidato. Al iniciar, las preguntas se resolverán de forma consecutiva y el tiempo será continuo durante toda la evaluación.',
 
-    candidate:
-      'Nombre del candidato',
+    candidate: 'Nombre del candidato',
 
-    candidatePlaceholder:
-      'Ej. Hernan Chapid',
+    candidatePlaceholder: 'Ej. Hernan Chapid',
 
-    start:
-      'Iniciar evaluación',
+    start: 'Iniciar evaluación',
 
-    back:
-      'Volver a la evaluación',
+    back: 'Volver a la evaluación',
   },
 
   createAssessment: {
-    eyebrow:
-      'Evaluación técnica',
+    eyebrow: 'Evaluación técnica',
 
-    title:
-      'Crear evaluación',
+    title: 'Crear evaluación',
 
-    description:
-      'Define la información básica de la evaluación técnica.',
+    description: 'Define la información básica de la evaluación técnica.',
 
-    back:
-      'Volver a evaluaciones',
+    back: 'Volver a evaluaciones',
 
     fields: {
-      name:
-        'Nombre',
+      name: 'Nombre',
 
-      namePlaceholder:
-        'Ej. Fundamentos de programación',
+      namePlaceholder: 'Ej. Fundamentos de programación',
 
-      description:
-        'Descripción',
+      description: 'Descripción',
 
-      descriptionPlaceholder:
-        'Describe el objetivo de la evaluación...',
+      descriptionPlaceholder: 'Describe el objetivo de la evaluación...',
 
-      timeLimit:
-        'Tiempo límite',
+      timeLimit: 'Tiempo límite',
     },
 
-    submit:
-      'Crear evaluación',
+    submit: 'Crear evaluación',
 
-    submitting:
-      'Creando...',
+    submitting: 'Creando...',
 
     errors: {
-      create:
-        'No fue posible crear la evaluación.',
+      create: 'No fue posible crear la evaluación.',
     },
   },
 
   editAssessment: {
-    eyebrow:
-      'Evaluación técnica',
+    eyebrow: 'Evaluación técnica',
 
-    title:
-      'Editar evaluación',
+    title: 'Editar evaluación',
 
-    description:
-      'Actualiza la información de la evaluación técnica.',
+    description: 'Actualiza la información de la evaluación técnica.',
 
-    back:
-      'Volver a la evaluación',
+    back: 'Volver a la evaluación',
 
     fields: {
-      name:
-        'Nombre',
+      name: 'Nombre',
 
-      namePlaceholder:
-        'Ej. Fundamentos de programación',
+      namePlaceholder: 'Ej. Fundamentos de programación',
 
-      description:
-        'Descripción',
+      description: 'Descripción',
 
-      descriptionPlaceholder:
-        'Describe el objetivo de la evaluación...',
+      descriptionPlaceholder: 'Describe el objetivo de la evaluación...',
 
-      timeLimit:
-        'Tiempo límite',
+      timeLimit: 'Tiempo límite',
     },
 
-    submit:
-      'Guardar cambios',
+    submit: 'Guardar cambios',
 
-    submitting:
-      'Guardando...',
+    submitting: 'Guardando...',
 
-    loading:
-      'Cargando evaluación...',
+    loading: 'Cargando evaluación...',
 
     errors: {
-      assessmentIdRequired:
-        'El identificador de la evaluación es obligatorio.',
+      assessmentIdRequired: 'El identificador de la evaluación es obligatorio.',
 
-      load:
-        'No fue posible cargar la evaluación.',
+      load: 'No fue posible cargar la evaluación.',
 
-      update:
-        'No fue posible actualizar la evaluación.',
+      update: 'No fue posible actualizar la evaluación.',
     },
   },
 
   createQuestion: {
-    eyebrow:
-      'Evaluación técnica',
+    eyebrow: 'Evaluación técnica',
 
-    title:
-      'Crear pregunta',
+    title: 'Crear pregunta',
 
-    description:
-      'Configura el ejercicio de programación y sus casos de prueba.',
+    description: 'Configura el ejercicio de programación y sus casos de prueba.',
 
-    back:
-      'Volver a la evaluación',
+    back: 'Volver a la evaluación',
 
     fields: {
-      title:
-        'Título',
+      title: 'Título',
 
-      titlePlaceholder:
-        'Ej. Duplicar un número',
+      titlePlaceholder: 'Ej. Duplicar un número',
 
-      description:
-        'Descripción',
+      description: 'Descripción',
 
-      descriptionPlaceholder:
-        'Describe lo que debe resolver el candidato...',
+      descriptionPlaceholder: 'Describe lo que debe resolver el candidato...',
 
-      score:
-        'Puntaje',
+      score: 'Puntaje',
     },
 
     languages: {
-      title:
-        'Lenguajes permitidos',
+      title: 'Lenguajes permitidos',
 
-      description:
-        'Selecciona los lenguajes que podrá utilizar el candidato.',
+      description: 'Selecciona los lenguajes que podrá utilizar el candidato.',
     },
 
     testCases: {
-      title:
-        'Casos de prueba',
+      title: 'Casos de prueba',
 
       description:
         'Los casos privados se utilizan para validar la solución sin revelar sus datos al candidato.',
 
-      add:
-        'Agregar caso de prueba',
+      add: 'Agregar caso de prueba',
 
-      remove:
-        'Eliminar',
+      remove: 'Eliminar',
 
-      testCase:
-        'Caso de prueba',
+      testCase: 'Caso de prueba',
 
-      input:
-        'Entrada',
+      input: 'Entrada',
 
-      inputPlaceholder:
-        'Ej. 5',
+      inputPlaceholder: 'Ej. 5',
 
-      expectedOutput:
-        'Salida esperada',
+      expectedOutput: 'Salida esperada',
 
-      expectedOutputPlaceholder:
-        'Ej. 10',
+      expectedOutputPlaceholder: 'Ej. 10',
 
-      private:
-        'Caso de prueba privado',
+      private: 'Caso de prueba privado',
     },
 
-    submit:
-      'Crear pregunta',
+    submit: 'Crear pregunta',
 
-    submitting:
-      'Creando...',
+    submitting: 'Creando...',
 
     errors: {
-      assessmentIdRequired:
-        'El identificador de la evaluación es obligatorio.',
+      assessmentIdRequired: 'El identificador de la evaluación es obligatorio.',
 
-      languageRequired:
-        'Selecciona al menos un lenguaje de programación.',
+      languageRequired: 'Selecciona al menos un lenguaje de programación.',
 
-      create:
-        'No fue posible crear la pregunta.',
+      create: 'No fue posible crear la pregunta.',
     },
   },
 
   editQuestion: {
-    eyebrow:
-      'Evaluación técnica',
+    eyebrow: 'Evaluación técnica',
 
-    title:
-      'Editar pregunta',
+    title: 'Editar pregunta',
 
-    description:
-      'Actualiza la información de la pregunta de programación.',
+    description: 'Actualiza la información de la pregunta de programación.',
 
-    back:
-      'Volver a la evaluación',
+    back: 'Volver a la evaluación',
 
     fields: {
-      title:
-        'Título',
+      title: 'Título',
 
-      titlePlaceholder:
-        'Ej. Duplicar un número',
+      titlePlaceholder: 'Ej. Duplicar un número',
 
-      description:
-        'Descripción',
+      description: 'Descripción',
 
-      descriptionPlaceholder:
-        'Describe lo que debe resolver el candidato...',
+      descriptionPlaceholder: 'Describe lo que debe resolver el candidato...',
 
-      score:
-        'Puntaje',
+      score: 'Puntaje',
     },
 
     languages: {
-      title:
-        'Lenguajes permitidos',
+      title: 'Lenguajes permitidos',
 
-      description:
-        'Selecciona los lenguajes que podrá utilizar el candidato.',
+      description: 'Selecciona los lenguajes que podrá utilizar el candidato.',
     },
 
     testCasesNotice: {
-      title:
-        'Casos de prueba',
+      title: 'Casos de prueba',
 
       description:
         'Los casos de prueba no pueden modificarse después de crear la pregunta. Si necesitas cambiarlos, elimina la pregunta y crea una nueva.',
     },
 
-    submit:
-      'Guardar cambios',
+    submit: 'Guardar cambios',
 
-    submitting:
-      'Guardando...',
+    submitting: 'Guardando...',
 
-    loading:
-      'Cargando pregunta...',
+    loading: 'Cargando pregunta...',
 
     errors: {
-      missingIds:
-        'No se encontró la evaluación o la pregunta.',
+      missingIds: 'No se encontró la evaluación o la pregunta.',
 
-      load:
-        'No fue posible cargar la pregunta.',
+      load: 'No fue posible cargar la pregunta.',
 
-      languageRequired:
-        'Selecciona al menos un lenguaje de programación.',
+      languageRequired: 'Selecciona al menos un lenguaje de programación.',
 
-      update:
-        'No fue posible actualizar la pregunta.',
+      update: 'No fue posible actualizar la pregunta.',
     },
   },
 
   solveQuestion: {
-    eyebrow:
-      'Pregunta de programación',
+    eyebrow: 'Pregunta de programación',
 
     labels: {
-      maximumScore:
-        'Puntaje máximo',
+      maximumScore: 'Puntaje máximo',
 
-      points:
-        'puntos',
+      points: 'puntos',
 
-      timeRemaining:
-        'Tiempo restante',
+      timeRemaining: 'Tiempo restante',
 
-      code:
-        'Código',
+      code: 'Código',
 
-      candidate:
-        'Candidato',
+      candidate: 'Candidato',
 
-      executionTime:
-        'Tiempo',
+      executionTime: 'Tiempo',
 
-      memory:
-        'Memoria',
+      memory: 'Memoria',
 
-      status:
-        'Estado',
+      status: 'Estado',
 
-      question:
-        'Pregunta',
+      question: 'Pregunta',
 
-      of:
-        'de',
+      of: 'de',
     },
 
     publicTests: {
-      title:
-        'Casos de prueba públicos',
+      title: 'Casos de prueba públicos',
 
       description:
         'Puedes utilizar estos casos para probar tu solución antes de enviarla.',
 
-      select:
-        'Caso de prueba',
+      select: 'Caso de prueba',
 
-      option:
-        'Caso público',
+      option: 'Caso público',
 
-      input:
-        'Entrada',
+      input: 'Entrada',
 
-      expectedOutput:
-        'Salida esperada',
+      expectedOutput: 'Salida esperada',
 
-      empty:
-        'Esta pregunta no tiene casos de prueba públicos disponibles.',
+      empty: 'Esta pregunta no tiene casos de prueba públicos disponibles.',
     },
 
-    runCode:
-      'Ejecutar código',
+    runCode: 'Ejecutar código',
 
-    running:
-      'Ejecutando...',
+    running: 'Ejecutando...',
 
-    submitAnswer:
-      'Enviar y continuar',
+    submitAnswer: 'Enviar y continuar',
 
-    finishAssessment:
-      'Finalizar evaluación',
+    finishAssessment: 'Finalizar evaluación',
 
-    submitting:
-      'Enviando...',
+    submitting: 'Enviando...',
 
     console: {
-      title:
-        'Consola',
+      title: 'Consola',
 
-      empty:
-        'Ejecuta tu código para visualizar el resultado.',
+      empty: 'Ejecuta tu código para visualizar el resultado.',
     },
 
-    loading:
-      'Cargando pregunta...',
+    loading: 'Cargando pregunta...',
 
     errors: {
-      questionIdRequired:
-        'El identificador de la pregunta es obligatorio.',
+      questionIdRequired: 'El identificador de la pregunta es obligatorio.',
 
-      questionNotFound:
-        'No se encontró la pregunta.',
+      questionNotFound: 'No se encontró la pregunta.',
 
-      load:
-        'No fue posible cargar la pregunta.',
+      load: 'No fue posible cargar la pregunta.',
 
-      execution:
-        'No fue posible ejecutar el código.',
+      execution: 'No fue posible ejecutar el código.',
 
-      submission:
-        'No fue posible enviar la respuesta.',
+      submission: 'No fue posible enviar la respuesta.',
 
-      missingIds:
-        'No se encontró la evaluación o la pregunta.',
+      missingIds: 'No se encontró la evaluación o la pregunta.',
 
       noActiveSession:
         'No existe una evaluación en curso. Inicia la evaluación desde su detalle.',
 
-      sessionUpdate:
-        'No fue posible actualizar el progreso de la evaluación.',
+      sessionUpdate: 'No fue posible actualizar el progreso de la evaluación.',
 
-      nextQuestion:
-        'No fue posible encontrar la siguiente pregunta.',
+      nextQuestion: 'No fue posible encontrar la siguiente pregunta.',
     },
   },
 
   assessmentResults: {
-    eyebrow:
-      'Evaluación finalizada',
+    eyebrow: 'Evaluación finalizada',
 
-    title:
-      'Resultado final',
+    title: 'Resultado final',
 
-    back:
-      'Volver a evaluaciones',
+    back: 'Volver a evaluaciones',
 
-    finish:
-      'Finalizar y volver a evaluaciones',
+    finish: 'Finalizar y volver a evaluaciones',
 
-    questionsTitle:
-      'Resultado por pregunta',
+    questionsTitle: 'Resultado por pregunta',
 
-    testsPassed:
-      'casos aprobados',
+    testsPassed: 'casos aprobados',
 
-    unanswered:
-      'Sin respuesta registrada',
+    unanswered: 'Sin respuesta registrada',
 
     timeExpired: {
-      title:
-        'Tiempo agotado',
+      title: 'Tiempo agotado',
 
       description:
         'El tiempo límite de la evaluación terminó. Se conservaron los resultados obtenidos hasta ese momento y las preguntas no respondidas se calificaron con cero puntos.',
     },
 
     labels: {
-      candidate:
-        'Candidato',
+      candidate: 'Candidato',
 
-      score:
-        'Puntaje obtenido',
+      score: 'Puntaje obtenido',
 
-      correctQuestions:
-        'Preguntas correctas',
+      correctQuestions: 'Preguntas correctas',
 
-      timeSpent:
-        'Tiempo empleado',
+      timeSpent: 'Tiempo empleado',
 
-      correct:
-        'preguntas correctas',
+      correct: 'preguntas correctas',
 
-      incorrect:
-        'preguntas incorrectas',
+      incorrect: 'preguntas incorrectas',
     },
 
     errors: {
-      notFound:
-        'No se encontró información de la evaluación finalizada.',
+      notFound: 'No se encontró información de la evaluación finalizada.',
     },
   },
 
   results: {
-    eyebrow:
-      'Resultado de la evaluación',
+    eyebrow: 'Resultado de la evaluación',
 
-    title:
-      'Resultado de la respuesta',
+    title: 'Resultado de la respuesta',
 
-    description:
-      'Revisa el resultado obtenido en la evaluación técnica.',
+    description: 'Revisa el resultado obtenido en la evaluación técnica.',
 
-    loading:
-      'Cargando resultados...',
+    loading: 'Cargando resultados...',
 
-    notFound:
-      'No se encontró la respuesta.',
+    notFound: 'No se encontró la respuesta.',
 
-    back:
-      'Volver a evaluaciones',
+    back: 'Volver a evaluaciones',
 
     labels: {
-      status:
-        'Estado',
+      status: 'Estado',
 
-      score:
-        'Puntaje',
+      score: 'Puntaje',
 
-      candidate:
-        'Candidato',
+      candidate: 'Candidato',
 
-      language:
-        'Lenguaje',
+      language: 'Lenguaje',
 
-      testsPassed:
-        'Pruebas aprobadas',
+      testsPassed: 'Pruebas aprobadas',
 
-      timeSpent:
-        'Tiempo empleado',
+      timeSpent: 'Tiempo empleado',
     },
 
     testResults: {
-      title:
-        'Resultados de las pruebas',
+      title: 'Resultados de las pruebas',
 
-      testCase:
-        'Caso de prueba',
+      testCase: 'Caso de prueba',
 
-      public:
-        'Caso de prueba público',
+      public: 'Caso de prueba público',
 
-      private:
-        'Caso de prueba privado',
+      private: 'Caso de prueba privado',
 
-      passed:
-        'Aprobado',
+      passed: 'Aprobado',
 
-      failed:
-        'Fallido',
+      failed: 'Fallido',
     },
 
     errors: {
-      submissionIdRequired:
-        'El identificador de la respuesta es obligatorio.',
+      submissionIdRequired: 'El identificador de la respuesta es obligatorio.',
 
-      load:
-        'No fue posible cargar el resultado.',
+      load: 'No fue posible cargar el resultado.',
     },
   },
 
   submissionStatus: {
-    PASSED:
-      'APROBADO',
+    PASSED: 'APROBADO',
 
-    PARTIAL:
-      'PARCIAL',
+    PARTIAL: 'PARCIAL',
 
-    FAILED:
-      'FALLIDO',
+    FAILED: 'FALLIDO',
   },
 
   executionStatus: {
-    SUCCESS:
-      'EJECUCIÓN EXITOSA',
+    SUCCESS: 'EJECUCIÓN EXITOSA',
 
-    COMPILATION_ERROR:
-      'ERROR DE COMPILACIÓN',
+    COMPILATION_ERROR: 'ERROR DE COMPILACIÓN',
 
-    RUNTIME_ERROR:
-      'ERROR DE EJECUCIÓN',
+    RUNTIME_ERROR: 'ERROR DE EJECUCIÓN',
 
-    TIMEOUT:
-      'TIEMPO DE EJECUCIÓN AGOTADO',
+    TIMEOUT: 'TIEMPO DE EJECUCIÓN AGOTADO',
 
-    ERROR:
-      'ERROR',
+    ERROR: 'ERROR',
   },
 
   languages: {
-    java:
-      'Java',
+    java: 'Java',
 
-    javascript:
-      'JavaScript',
+    javascript: 'JavaScript',
 
-    python:
-      'Python',
+    python: 'Python',
   },
 } as const

@@ -13,12 +13,9 @@ export function useAssessmentTimer() {
     }
 
     const intervalId = window.setInterval(() => {
-      const elapsedMilliseconds =
-        Date.now() - startedAtRef.current
+      const elapsedMilliseconds = Date.now() - startedAtRef.current
 
-      setElapsedSeconds(
-        Math.floor(elapsedMilliseconds / 1000),
-      )
+      setElapsedSeconds(Math.floor(elapsedMilliseconds / 1000))
     }, 1000)
 
     return () => {
@@ -26,17 +23,14 @@ export function useAssessmentTimer() {
     }
   }, [isRunning])
 
-   const stop = () => {
+  const stop = () => {
     if (finalElapsedSecondsRef.current !== null) {
       return finalElapsedSecondsRef.current
     }
 
-    const elapsedMilliseconds =
-      Date.now() - startedAtRef.current
+    const elapsedMilliseconds = Date.now() - startedAtRef.current
 
-    const finalElapsedSeconds = Math.floor(
-      elapsedMilliseconds / 1000,
-    )
+    const finalElapsedSeconds = Math.floor(elapsedMilliseconds / 1000)
 
     finalElapsedSecondsRef.current = finalElapsedSeconds
 

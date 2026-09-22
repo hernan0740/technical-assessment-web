@@ -8,24 +8,14 @@ import type {
 import type { Question } from '@/types/question'
 import type { SubmissionResult } from '@/types/submission'
 
-const SESSION_PREFIX =
-  'technical-assessment-session'
+const SESSION_PREFIX = 'technical-assessment-session'
 
-function getStorageKey(
-  assessmentId: string,
-) {
+function getStorageKey(assessmentId: string) {
   return `${SESSION_PREFIX}:${assessmentId}`
 }
 
-function saveAssessmentSession(
-  session: AssessmentSession,
-): AssessmentSession {
-  sessionStorage.setItem(
-    getStorageKey(
-      session.assessmentId,
-    ),
-    JSON.stringify(session),
-  )
+function saveAssessmentSession(session: AssessmentSession): AssessmentSession {
+  sessionStorage.setItem(getStorageKey(session.assessmentId), JSON.stringify(session))
 
   return session
 }
@@ -38,104 +28,64 @@ export function startAssessmentSession(
   const now = Date.now()
 
   const session: AssessmentSession = {
-    assessmentId:
-      assessment.id,
+    assessmentId: assessment.id,
 
-    assessmentName:
-      assessment.name,
+    assessmentName: assessment.name,
 
-    candidate:
-      candidate.trim(),
+    candidate: candidate.trim(),
 
-    timeLimitMinutes:
-      assessment.timeLimitMinutes,
+    timeLimitMinutes: assessment.timeLimitMinutes,
 
-    startedAt:
-      now,
+    startedAt: now,
 
-    questionStartedAt:
-      now,
+    questionStartedAt: now,
 
-    currentQuestionIndex:
-      0,
+    currentQuestionIndex: 0,
 
-    questions:
-      questions.map(
-        (question) => ({
-          id:
-            question.id,
+    questions: questions.map((question) => ({
+      id: question.id,
 
-          title:
-            question.title,
+      title: question.title,
 
-          maxScore:
-            question.score,
-        }),
-      ),
+      maxScore: question.score,
+    })),
 
     submissions: [],
   }
 
-  return saveAssessmentSession(
-    session,
-  )
+  return saveAssessmentSession(session)
 }
 
-export function getAssessmentSession(
-  assessmentId: string,
-): AssessmentSession | null {
-  const storedSession =
-    sessionStorage.getItem(
-      getStorageKey(
-        assessmentId,
-      ),
-    )
+export function getAssessmentSession(assessmentId: string): AssessmentSession | null {
+  const storedSession = sessionStorage.getItem(getStorageKey(assessmentId))
 
   if (!storedSession) {
     return null
   }
 
   try {
-    return JSON.parse(
-      storedSession,
-    ) as AssessmentSession
+    return JSON.parse(storedSession) as AssessmentSession
   } catch {
-    sessionStorage.removeItem(
-      getStorageKey(
-        assessmentId,
-      ),
-    )
+    sessionStorage.removeItem(getStorageKey(assessmentId))
 
     return null
   }
 }
 
-export function hasAssessmentTimeExpired(
-  session: AssessmentSession,
-): boolean {
+export function hasAssessmentTimeExpired(session: AssessmentSession): boolean {
   if (session.completedAt) {
     return true
   }
 
-  const timeLimitMilliseconds =
-    session.timeLimitMinutes *
-    60 *
-    1000
+  const timeLimitMilliseconds = session.timeLimitMinutes * 60 * 1000
 
-  return (
-    Date.now() -
-      session.startedAt >=
-    timeLimitMilliseconds
-  )
+  return Date.now() - session.startedAt >= timeLimitMilliseconds
 }
 
 export function finishAssessmentByTimeout(
   assessmentId: string,
 ): AssessmentSession | null {
-  const session =
-    getAssessmentSession(
-      assessmentId,
-    )
+  const session = getAssessmentSession(assessmentId)
 
   if (!session) {
     return null
@@ -145,30 +95,22 @@ export function finishAssessmentByTimeout(
     return session
   }
 
-  const updatedSession:
-    AssessmentSession = {
-      ...session,
+  const updatedSession: AssessmentSession = {
+    ...session,
 
-      completedAt:
-        Date.now(),
+    completedAt: Date.now(),
 
-      completionReason:
-        'TIME_EXPIRED',
-    }
+    completionReason: 'TIME_EXPIRED',
+  }
 
-  return saveAssessmentSession(
-    updatedSession,
-  )
+  return saveAssessmentSession(updatedSession)
 }
 
 export function registerAssessmentSubmission(
   assessmentId: string,
   result: SubmissionResult,
 ): AssessmentSession | null {
-  const session =
-    getAssessmentSession(
-      assessmentId,
-    )
+  const session = getAssessmentSession(assessmentId)
 
   if (!session) {
     return null
@@ -178,133 +120,77 @@ export function registerAssessmentSubmission(
     return session
   }
 
-  const questionIndex =
-    session.questions.findIndex(
-      (question) =>
-        question.id ===
-        result.questionId,
-    )
+  const questionIndex = session.questions.findIndex(
+    (question) => question.id === result.questionId,
+  )
 
   if (questionIndex === -1) {
     return null
   }
 
-  const question =
-    session.questions[
-      questionIndex
-    ]
+  const question = session.questions[questionIndex]
 
-  const submission:
-    AssessmentSessionSubmission = {
-      submissionId:
-        result.id,
+  const submission: AssessmentSessionSubmission = {
+    submissionId: result.id,
 
-      questionId:
-        result.questionId,
+    questionId: result.questionId,
 
-      questionTitle:
-        question.title,
+    questionTitle: question.title,
 
-      status:
-        result.status,
+    status: result.status,
 
-      score:
-        result.score,
+    score: result.score,
 
-      maxScore:
-        result.maxScore,
+    maxScore: result.maxScore,
 
-      passedTests:
-        result.passedTests,
+    passedTests: result.passedTests,
 
-      totalTests:
-        result.totalTests,
-    }
+    totalTests: result.totalTests,
+  }
 
-  const submissions =
-    session.submissions.filter(
-      (
-        currentSubmission,
-      ) =>
-        currentSubmission.questionId !==
-        result.questionId,
+  const submissions = session.submissions.filter(
+    (currentSubmission) => currentSubmission.questionId !== result.questionId,
+  )
+
+  submissions.push(submission)
+
+  submissions.sort((first, second) => {
+    const firstIndex = session.questions.findIndex(
+      (question) => question.id === first.questionId,
     )
 
-  submissions.push(
-    submission,
-  )
+    const secondIndex = session.questions.findIndex(
+      (question) => question.id === second.questionId,
+    )
 
-  submissions.sort(
-    (
-      first,
-      second,
-    ) => {
-      const firstIndex =
-        session.questions.findIndex(
-          (question) =>
-            question.id ===
-            first.questionId,
-        )
+    return firstIndex - secondIndex
+  })
 
-      const secondIndex =
-        session.questions.findIndex(
-          (question) =>
-            question.id ===
-            second.questionId,
-        )
+  const isLastQuestion = questionIndex === session.questions.length - 1
 
-      return (
-        firstIndex -
-        secondIndex
-      )
-    },
-  )
+  const now = Date.now()
 
-  const isLastQuestion =
-    questionIndex ===
-    session.questions.length - 1
+  const updatedSession: AssessmentSession = {
+    ...session,
 
-  const now =
-    Date.now()
+    submissions,
 
-  const updatedSession:
-    AssessmentSession = {
-      ...session,
+    currentQuestionIndex: isLastQuestion ? questionIndex : questionIndex + 1,
 
-      submissions,
+    questionStartedAt: isLastQuestion ? session.questionStartedAt : now,
 
-      currentQuestionIndex:
-        isLastQuestion
-          ? questionIndex
-          : questionIndex + 1,
+    ...(isLastQuestion
+      ? {
+          completedAt: now,
 
-      questionStartedAt:
-        isLastQuestion
-          ? session.questionStartedAt
-          : now,
+          completionReason: 'COMPLETED' as const,
+        }
+      : {}),
+  }
 
-      ...(isLastQuestion
-        ? {
-            completedAt:
-              now,
-
-            completionReason:
-              'COMPLETED' as const,
-          }
-        : {}),
-    }
-
-  return saveAssessmentSession(
-    updatedSession,
-  )
+  return saveAssessmentSession(updatedSession)
 }
 
-export function clearAssessmentSession(
-  assessmentId: string,
-): void {
-  sessionStorage.removeItem(
-    getStorageKey(
-      assessmentId,
-    ),
-  )
+export function clearAssessmentSession(assessmentId: string): void {
+  sessionStorage.removeItem(getStorageKey(assessmentId))
 }

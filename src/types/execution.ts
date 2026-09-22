@@ -1,11 +1,7 @@
 import type { ProgrammingLanguage } from '@/types/programming-language'
 
 export type ExecutionStatus =
-  | 'SUCCESS'
-  | 'COMPILATION_ERROR'
-  | 'RUNTIME_ERROR'
-  | 'TIMEOUT'
-  | 'ERROR'
+  'SUCCESS' | 'COMPILATION_ERROR' | 'RUNTIME_ERROR' | 'TIMEOUT' | 'ERROR'
 
 export interface RunCodeRequest {
   language: ProgrammingLanguage

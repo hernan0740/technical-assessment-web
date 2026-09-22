@@ -156,10 +156,6 @@ export function QuestionSolvePage() {
       null,
     )
 
-  /*
-   * Actualiza el reloj visual
-   * cada segundo.
-   */
   useEffect(() => {
     const intervalId =
       window.setInterval(
@@ -178,9 +174,7 @@ export function QuestionSolvePage() {
     }
   }, [])
 
-  /*
-   * Carga y valida la sesión.
-   */
+
   useEffect(() => {
     const loadQuestion =
       async () => {
@@ -220,11 +214,6 @@ export function QuestionSolvePage() {
           return
         }
 
-        /*
-         * Si la prueba ya terminó,
-         * no permitimos volver
-         * a resolver preguntas.
-         */
         if (
           activeSession.completedAt
         ) {
@@ -238,10 +227,6 @@ export function QuestionSolvePage() {
           return
         }
 
-        /*
-         * También validamos el tiempo
-         * al entrar/refrescar la página.
-         */
         if (
           hasAssessmentTimeExpired(
             activeSession,
@@ -267,10 +252,6 @@ export function QuestionSolvePage() {
               .currentQuestionIndex
           ]
 
-        /*
-         * Evita saltarse preguntas
-         * modificando manualmente la URL.
-         */
         if (
           activeQuestion &&
           activeQuestion.id !==
@@ -347,15 +328,6 @@ export function QuestionSolvePage() {
     navigate,
   ])
 
-  /*
-   * Detecta automáticamente cuando
-   * el tiempo llega a cero.
-   *
-   * Si justo se está enviando una
-   * respuesta, esperamos a que termine
-   * ese request para no perder una
-   * respuesta enviada a tiempo.
-   */
   useEffect(() => {
     if (
       !assessmentId ||
@@ -536,11 +508,6 @@ export function QuestionSolvePage() {
         return
       }
 
-      /*
-       * Si ya se había agotado
-       * el tiempo antes de presionar
-       * Submit, no enviamos respuesta.
-       */
       if (
         hasAssessmentTimeExpired(
           currentSession,
@@ -569,10 +536,7 @@ export function QuestionSolvePage() {
           null,
         )
 
-        /*
-         * Tiempo empleado únicamente
-         * en esta pregunta.
-         */
+
         const timeSpentSeconds =
           Math.max(
             0,
@@ -616,10 +580,6 @@ export function QuestionSolvePage() {
           return
         }
 
-        /*
-         * Si era la última pregunta,
-         * termina normalmente.
-         */
         if (
           updatedSession.completedAt
         ) {
@@ -630,12 +590,6 @@ export function QuestionSolvePage() {
           return
         }
 
-        /*
-         * La respuesta sí alcanzó
-         * a enviarse, pero puede que
-         * durante la ejecución de Judge0
-         * haya terminado el tiempo.
-         */
         if (
           hasAssessmentTimeExpired(
             updatedSession,

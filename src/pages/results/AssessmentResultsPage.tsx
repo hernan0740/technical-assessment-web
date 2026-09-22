@@ -75,10 +75,6 @@ export function AssessmentResultsPage() {
     session.completionReason ===
     'TIME_EXPIRED'
 
-  /*
-   * Los submissions existentes
-   * conservan su puntaje.
-   */
   const totalScore =
     session.submissions.reduce(
       (
@@ -101,13 +97,6 @@ export function AssessmentResultsPage() {
       0,
     )
 
-  /*
-   * Solo una pregunta completamente
-   * aprobada cuenta como correcta.
-   *
-   * PARTIAL, FAILED o sin respuesta
-   * cuentan como no aprobadas.
-   */
   const passedQuestions =
     session.submissions.filter(
       (submission) =>
@@ -133,26 +122,12 @@ export function AssessmentResultsPage() {
       ),
     )
 
-  /*
-   * Si venció el tiempo, mostramos
-   * exactamente el límite configurado
-   * y no unos segundos adicionales
-   * causados por el intervalo del navegador.
-   */
   const timeSpentSeconds =
     isTimeExpired
       ? session.timeLimitMinutes *
         60
       : calculatedTimeSpent
 
-  /*
-   * Construimos resultados usando TODAS
-   * las preguntas, no solo las que tienen
-   * submission.
-   *
-   * Esto permite mostrar las preguntas
-   * no respondidas como FALLIDAS.
-   */
   const questionResults =
     session.questions.map(
       (question) => {

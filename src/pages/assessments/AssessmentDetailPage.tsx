@@ -14,6 +14,18 @@ import { startAssessmentSession } from '@/services/assessment-session.service'
 import type { Assessment } from '@/types/assessment'
 import type { Question } from '@/types/question'
 
+const CANDIDATE_NAME_REGEX = /^\p{L}+(?: \p{L}+)*$/u
+
+const CANDIDATE_NAME_ERROR = 'El nombre solo puede contener letras y espacios.'
+
+function sanitizeCandidateName(value: string): string {
+  return value
+    .replace(/[^\p{L}\s]/gu, '')
+    .replace(/\s+/g, ' ')
+    .trimStart()
+    .slice(0, 100)
+}
+
 export function AssessmentDetailPage() {
   const { assessmentId } = useParams<{
     assessmentId: string
@@ -27,11 +39,17 @@ export function AssessmentDetailPage() {
 
   const [candidate, setCandidate] = useState('')
 
+  const [candidateError, setCandidateError] = useState<string | null>(null)
+
   const [isLoading, setIsLoading] = useState(true)
 
   const [error, setError] = useState<string | null>(null)
 
   const [deletingQuestionId, setDeletingQuestionId] = useState<string | null>(null)
+
+  const normalizedCandidate = candidate.trim()
+
+  const isCandidateValid = CANDIDATE_NAME_REGEX.test(normalizedCandidate)
 
   useEffect(() => {
     const loadAssessment = async () => {
@@ -46,7 +64,6 @@ export function AssessmentDetailPage() {
       try {
         const [assessmentData, questionsData] = await Promise.all([
           getAssessmentById(assessmentId),
-
           getQuestionsByAssessment(assessmentId),
         ])
 
@@ -63,12 +80,28 @@ export function AssessmentDetailPage() {
     void loadAssessment()
   }, [assessmentId])
 
+  const handleCandidateChange = (value: string) => {
+    const containsInvalidCharacters = /[^\p{L}\s]/u.test(value)
+
+    const sanitizedValue = sanitizeCandidateName(value)
+
+    setCandidate(sanitizedValue)
+
+    setCandidateError(containsInvalidCharacters ? CANDIDATE_NAME_ERROR : null)
+  }
+
   const handleStartAssessment = () => {
-    if (!assessment || questions.length === 0 || !candidate.trim()) {
+    if (!assessment || questions.length === 0) {
       return
     }
 
-    const session = startAssessmentSession(assessment, questions, candidate)
+    if (!isCandidateValid) {
+      setCandidateError(CANDIDATE_NAME_ERROR)
+
+      return
+    }
+
+    const session = startAssessmentSession(assessment, questions, normalizedCandidate)
 
     const firstQuestion = session.questions[0]
 
@@ -101,7 +134,6 @@ export function AssessmentDetailPage() {
         currentAssessment
           ? {
               ...currentAssessment,
-
               questionCount: Math.max(0, currentAssessment.questionCount - 1),
             }
           : currentAssessment,
@@ -198,17 +230,43 @@ export function AssessmentDetailPage() {
 
                     <input
                       id="candidate"
+                      name="candidate"
+                      type="text"
+                      autoComplete="name"
+                      maxLength={100}
                       value={candidate}
-                      onChange={(event) => setCandidate(event.target.value)}
+                      onChange={(event) => handleCandidateChange(event.target.value)}
                       placeholder={COPY.assessmentSession.candidatePlaceholder}
-                      className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2"
+                      aria-invalid={Boolean(candidateError)}
+                      aria-describedby={
+                        candidateError ? 'candidate-error' : 'candidate-help'
+                      }
+                      className={`w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 ${
+                        candidateError
+                          ? 'border-red-500 focus:ring-red-200'
+                          : 'border-slate-300 focus:ring-blue-200'
+                      }`}
                     />
+
+                    {candidateError ? (
+                      <p
+                        id="candidate-error"
+                        role="alert"
+                        className="mt-2 text-sm text-red-600"
+                      >
+                        {candidateError}
+                      </p>
+                    ) : (
+                      <p id="candidate-help" className="mt-2 text-xs text-slate-500">
+                        Solo se permiten letras y espacios.
+                      </p>
+                    )}
                   </div>
 
                   <Button
                     type="button"
                     onClick={handleStartAssessment}
-                    disabled={!candidate.trim()}
+                    disabled={!isCandidateValid}
                     className="bg-[#0043A9] text-white hover:bg-[#00388F]"
                   >
                     {COPY.assessmentSession.start}
